@@ -56,7 +56,7 @@ public class MainApplication extends JFrame{
     private JPanel resultsPanel;
     private JScrollPane scrollPane;
 
-    HashMap<Integer,ComparisonData> allComparisonData = new HashMap<Integer,ComparisonData>();
+    HashMap<Integer,ComparisonData> allComparisonData = new HashMap<>();
     int featureId;
 
     public static void main(String[] args) throws IOException{
@@ -128,10 +128,20 @@ public class MainApplication extends JFrame{
         c1.next(window.getContentPane());
     }
 
+    // TODO: Currently placeholder, update after completing the algorithms for terrain features and comparison
     void updateResultsWindow(){
         for(Map.Entry m: allComparisonData.entrySet()){
-            System.out.println(m.getKey() + " : " + m.getValue());
+            // m.getKey() and m.getValue() mainly used inside this loop
+            // TODO: fix this suspicious call (double downcast?)
+            ComparisonData currentComparison = allComparisonData.get(m.getKey());
+            String featureName = currentComparison.getFeatureName();
+            String detail = String.format("%.2f to %.2f",currentComparison.getLowerRange(),currentComparison.getUpperRange());
+            String weight = String.format("%d",currentComparison.getWeight());
+            String likeliness = "94% (placeholder)";
+            this.resultsPanel.add(new ResultForm(featureName,detail,weight,likeliness).getPanel());
         }
+
+        this.resultsPanel.add(new ResultForm("Overall","","","94%").getPanel());
     }
 
     void addSelectedFeature(){
@@ -492,7 +502,7 @@ public class MainApplication extends JFrame{
         if(featureComboBoxFont != null) featureComboBox.setFont(featureComboBoxFont);
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("Levels");
-        defaultComboBoxModel1.addElement("Excluded Levels");
+        defaultComboBoxModel1.addElement("Levels Exclude");
         defaultComboBoxModel1.addElement("Max Area");
         defaultComboBoxModel1.addElement("Max Horizontal");
         defaultComboBoxModel1.addElement("Max Vertical");
@@ -560,7 +570,7 @@ public class MainApplication extends JFrame{
         label24.setText("Comparison Results                                                        ");
         rightPanel.add(label24,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JPanel panel17 = new JPanel();
-        panel17.setLayout(new GridLayoutManager(2,4,new Insets(0,0,0,0),-1,5,true,false));
+        panel17.setLayout(new GridLayoutManager(2,4,new Insets(0,0,0,0),0,0,true,false));
         panel17.setAlignmentY(0.5f);
         rightPanel.add(panel17,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
         final JLabel label25 = new JLabel();
@@ -568,8 +578,6 @@ public class MainApplication extends JFrame{
         if(label25Font != null) label25.setFont(label25Font);
         label25.setText("Feature");
         panel17.add(label25,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(39,15),null,0,false));
-        final Spacer spacer8 = new Spacer();
-        panel17.add(spacer8,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         final JLabel label26 = new JLabel();
         Font label26Font = this.$$$getFont$$$(null,-1,16,label26.getFont());
         if(label26Font != null) label26.setFont(label26Font);
@@ -585,6 +593,7 @@ public class MainApplication extends JFrame{
         if(label28Font != null) label28.setFont(label28Font);
         label28.setText("Likeliness");
         panel17.add(label28,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(50,15),null,0,false));
+        panel17.add(resultsPanel,new GridConstraints(1,0,1,4,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         final JLabel label29 = new JLabel();
         Font label29Font = this.$$$getFont$$$(null,-1,24,label29.getFont());
         if(label29Font != null) label29.setFont(label29Font);
@@ -595,8 +604,8 @@ public class MainApplication extends JFrame{
         if(return3Font != null) return3.setFont(return3Font);
         return3.setText("Return");
         panel3.add(return3,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
-        final Spacer spacer9 = new Spacer();
-        panel3.add(spacer9,new GridConstraints(2,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_WANT_GROW,1,null,null,null,0,false));
+        final Spacer spacer8 = new Spacer();
+        panel3.add(spacer8,new GridConstraints(2,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_WANT_GROW,1,null,null,null,0,false));
     }
 
     /**
