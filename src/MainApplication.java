@@ -11,7 +11,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainApplication extends JFrame{
     private JPanel cardPanel;
@@ -46,12 +48,16 @@ public class MainApplication extends JFrame{
     private JLabel terrain1Name;
     private JLabel terrain2Name;
     private JPanel panelTerrainFeaturesMain;
-    private JPanel testPanel1;
+    private JPanel comparisonPanel;
     private JButton addFeatureButton;
     private JComboBox featureComboBox;
     private JButton proceed0;
     private JPanel testPanel;
+    private JPanel resultsPanel;
     private JScrollPane scrollPane;
+
+    HashMap<Integer,ComparisonData> allComparisonData = new HashMap<Integer,ComparisonData>();
+    int featureId;
 
     public static void main(String[] args) throws IOException{
 
@@ -84,10 +90,16 @@ public class MainApplication extends JFrame{
             }
             window.updateMainWindow(terrain1,terrain2);
         });
-        window.proceed2.addActionListener(e -> c1.next(window.getContentPane()));
+
+        window.proceed2.addActionListener(e -> {
+            c1.next(window.getContentPane());
+            window.updateResultsWindow();
+        });
+
         window.helpButton.addActionListener(e -> c1.previous(window.getContentPane()));
         window.return2.addActionListener(e -> c1.previous(window.getContentPane()));
         window.return3.addActionListener(e -> c1.previous(window.getContentPane()));
+
         window.selectTerrainData1Button.addActionListener(e -> {
             if(window.createTerrainFileChooser(terrain1,imageHelper))
                 window.selectTerrainData1Button.setText(terrain1.getTerrainName());
@@ -96,10 +108,12 @@ public class MainApplication extends JFrame{
             if(window.createTerrainFileChooser(terrain2,imageHelper))
                 window.selectTerrainData2Button.setText(terrain2.getTerrainName());
         });
+
         window.addFeatureButton.addActionListener(e -> {
-            window.testPanel1.add(new TestForm().getPanel());
+            window.addSelectedFeature();
+
             System.out.println(window.featureComboBox.getSelectedIndex());
-            window.testPanel1.revalidate();
+            window.comparisonPanel.revalidate();
         });
 
 
@@ -112,6 +126,23 @@ public class MainApplication extends JFrame{
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         c1.next(window.getContentPane());
+    }
+
+    void updateResultsWindow(){
+        for(Map.Entry m: allComparisonData.entrySet()){
+            System.out.println(m.getKey() + " : " + m.getValue());
+        }
+    }
+
+    void addSelectedFeature(){
+        String featureName = this.featureComboBox.getSelectedItem().toString();
+        ++featureId;
+        allComparisonData.put(featureId,new ComparisonData(featureName));
+        this.comparisonPanel.add(new FeatureForm(featureId,featureName,this).getPanel());
+    }
+
+    void removeFeature(int featureId){
+        allComparisonData.remove(featureId);
     }
 
     void updateMainWindow(TerrainData terrain1,TerrainData terrain2){
@@ -450,7 +481,7 @@ public class MainApplication extends JFrame{
         if(label21Font != null) label21.setFont(label21Font);
         label21.setText("Weight");
         panel12.add(label21,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
-        panelTerrainFeaturesMain.add(testPanel1,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
+        panelTerrainFeaturesMain.add(comparisonPanel,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         addFeatureButton = new JButton();
         Font addFeatureButtonFont = this.$$$getFont$$$(null,-1,14,addFeatureButton.getFont());
         if(addFeatureButtonFont != null) addFeatureButton.setFont(addFeatureButtonFont);
@@ -460,11 +491,12 @@ public class MainApplication extends JFrame{
         Font featureComboBoxFont = this.$$$getFont$$$(null,-1,14,featureComboBox.getFont());
         if(featureComboBoxFont != null) featureComboBox.setFont(featureComboBoxFont);
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("Feature 1");
-        defaultComboBoxModel1.addElement("Feature 2");
-        defaultComboBoxModel1.addElement("Feature 3");
-        defaultComboBoxModel1.addElement("Feature 4");
-        defaultComboBoxModel1.addElement("Feature 5");
+        defaultComboBoxModel1.addElement("Levels");
+        defaultComboBoxModel1.addElement("Excluded Levels");
+        defaultComboBoxModel1.addElement("Max Area");
+        defaultComboBoxModel1.addElement("Max Horizontal");
+        defaultComboBoxModel1.addElement("Max Vertical");
+        defaultComboBoxModel1.addElement("Max Diagonal");
         featureComboBox.setModel(defaultComboBoxModel1);
         panelTerrainFeaturesMain.add(featureComboBox,new GridConstraints(3,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         return2 = new JButton();
@@ -600,7 +632,10 @@ public class MainApplication extends JFrame{
 
     private void createUIComponents(){
         // TODO: place custom component creation code here
-        testPanel1 = new JPanel();
-        testPanel1.setLayout(new BoxLayout(testPanel1,BoxLayout.Y_AXIS));
+        comparisonPanel = new JPanel();
+        comparisonPanel.setLayout(new BoxLayout(comparisonPanel,BoxLayout.Y_AXIS));
+
+        resultsPanel = new JPanel();
+        resultsPanel.setLayout(new BoxLayout(resultsPanel,BoxLayout.Y_AXIS));
     }
 }
