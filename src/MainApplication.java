@@ -1,3 +1,8 @@
+/*
+TODO: force users to input two terrain files and input at least one terrain feature before proceeding
+TODO: add a default terrain feature filled with range and weight
+TODO: enforce a max terrain feature (14) as it overflows otherwise
+*/
 import com.bulenkov.darcula.DarculaLaf;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -116,6 +121,10 @@ public class MainApplication extends JFrame{
             window.comparisonPanel.revalidate();
         });
 
+        // default terrain feature
+        ++window.featureId;
+        window.allComparisonData.put(window.featureId,new ComparisonData("Levels"));
+        window.comparisonPanel.add(new FeatureForm(window.featureId,"Levels","0.35","0.6",0,window).getPanel());
 
         // General application window configurations
         window.setContentPane(window.cardPanel);
@@ -130,6 +139,9 @@ public class MainApplication extends JFrame{
 
     // TODO: Currently placeholder, update after completing the algorithms for terrain features and comparison
     void updateResultsWindow(){
+        // TODO: Try to find a more elegant way to fix this (unnecessary reload)
+        this.resultsPanel.removeAll();
+
         for(Map.Entry m: allComparisonData.entrySet()){
             // m.getKey() and m.getValue() mainly used inside this loop
             // TODO: fix this suspicious call (double downcast?)

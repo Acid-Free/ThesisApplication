@@ -1,19 +1,28 @@
+/*
+TODO: Update ComparisonData after updating the components in the form
+*/
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class FeatureForm{
     private JButton testButton;
-    private JComboBox comboBox1;
+    private JComboBox weightComboBox;
     private JPanel panel;
-    private JTextField textField1;
-    private JTextField textField2;
+    private JTextField lowerRange;
+    private JTextField upperRange;
+
+    public FeatureForm(int featureId,String featureName,String lowerRangeValue,String upperRangeValue,
+                       int rangeIndex,MainApplication window){
+        this(featureId,featureName,window);
+        lowerRange.setText(lowerRangeValue);
+        upperRange.setText(upperRangeValue);
+        weightComboBox.setSelectedIndex(rangeIndex);
+    }
 
     public FeatureForm(int featureId,String featureName,MainApplication window){
         testButton.setText(featureName);
@@ -59,7 +68,7 @@ public class FeatureForm{
         testButton = new JButton();
         testButton.setText("Max Horizontal");
         panel.add(testButton,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
-        comboBox1 = new JComboBox();
+        weightComboBox = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("1");
         defaultComboBoxModel1.addElement("2");
@@ -71,16 +80,16 @@ public class FeatureForm{
         defaultComboBoxModel1.addElement("8");
         defaultComboBoxModel1.addElement("9");
         defaultComboBoxModel1.addElement("10");
-        comboBox1.setModel(defaultComboBoxModel1);
-        panel.add(comboBox1,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        weightComboBox.setModel(defaultComboBoxModel1);
+        panel.add(weightComboBox,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1,3,new Insets(0,0,0,0),-1,-1));
         panel.add(panel1,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
-        textField1 = new JTextField();
-        textField1.setText("");
-        panel1.add(textField1,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(40,-1),new Dimension(40,-1),0,false));
-        textField2 = new JTextField();
-        panel1.add(textField2,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(40,-1),new Dimension(40,-1),0,false));
+        lowerRange = new JTextField();
+        lowerRange.setText("");
+        panel1.add(lowerRange,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(40,-1),new Dimension(40,-1),0,false));
+        upperRange = new JTextField();
+        panel1.add(upperRange,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(40,-1),new Dimension(40,-1),0,false));
         final JLabel label1 = new JLabel();
         label1.setText("to");
         panel1.add(label1,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
