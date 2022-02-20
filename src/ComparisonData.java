@@ -6,14 +6,12 @@ public class ComparisonData{
     private float terrain1Result;
     private float terrain2Result;
     private float likeliness;
-    private int length;
 
     public float getTerrain1Result(){
         return terrain1Result;
     }
 
     public void setTerrain1Result(float terrain1Result){
-        System.out.println("terrain 1 updated");
         this.terrain1Result = terrain1Result;
     }
 
@@ -23,7 +21,6 @@ public class ComparisonData{
 
     public void setTerrain2Result(float terrain2Result){
         this.terrain2Result = terrain2Result;
-        System.out.println("terrain 2 updated");
     }
 
     public float getLikeliness(){
@@ -32,14 +29,6 @@ public class ComparisonData{
 
     public void setLikeliness(float likeliness){
         this.likeliness = likeliness;
-    }
-
-    public int getLength(){
-        return length;
-    }
-
-    public void setLength(int length){
-        this.length = length;
     }
 
     public ComparisonData(String featureName) {
@@ -95,7 +84,6 @@ public class ComparisonData{
                 ", terrain1Result=" + terrain1Result +
                 ", terrain2Result=" + terrain2Result +
                 ", likeliness=" + likeliness +
-                ", length=" + length +
                 '}';
     }
 }

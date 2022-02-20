@@ -1,4 +1,7 @@
 /*
+Observations:
+Level and Exclude Level are fundamentally the same
+
 TODO: force users to input two terrain files and input at least one terrain feature before proceeding
 TODO: add a default terrain feature filled with range and weight
 TODO: enforce a max terrain feature (14) as it overflows otherwise
@@ -107,12 +110,20 @@ public class MainApplication extends JFrame{
         window.return3.addActionListener(e -> c1.previous(window.getContentPane()));
 
         window.selectTerrainData1Button.addActionListener(e -> {
-            if(window.createTerrainFileChooser(terrain1,imageHelper))
-                window.selectTerrainData1Button.setText(terrain1.getTerrainName());
+            // Approach A
+//            if(window.createTerrainFileChooser(terrain1,imageHelper))
+//                window.selectTerrainData1Button.setText(terrain1.getTerrainName());
+            // Approach B
+            window.createTerrainFileChooserNative(terrain1,imageHelper);
+            window.selectTerrainData1Button.setText(terrain1.getTerrainName());
         });
         window.selectTerrainData2Button.addActionListener(e -> {
-            if(window.createTerrainFileChooser(terrain2,imageHelper))
-                window.selectTerrainData2Button.setText(terrain2.getTerrainName());
+            // Approach A
+//            if(window.createTerrainFileChooser(terrain2,imageHelper))
+//                window.selectTerrainData2Button.setText(terrain2.getTerrainName());
+            // Approach B
+            window.createTerrainFileChooserNative(terrain2,imageHelper);
+            window.selectTerrainData2Button.setText(terrain2.getTerrainName());
         });
 
         window.addFeatureButton.addActionListener(e -> {
@@ -124,7 +135,7 @@ public class MainApplication extends JFrame{
 
         // default terrain feature
         ++window.featureId;
-        ComparisonData defaultComparisonData = new ComparisonData("Level",0.0f,1.0f,0);
+        ComparisonData defaultComparisonData = new ComparisonData("Level",0.0f,1.0f,1);
         window.allComparisonData.put(window.featureId,defaultComparisonData);
         window.comparisonPanel.add(new FeatureForm(window.featureId,defaultComparisonData,window).getPanel());
 
@@ -161,10 +172,12 @@ public class MainApplication extends JFrame{
 
             String featureName = currentComparison.getFeatureName();
             // TODO: Update this when feature lists have different parameters (details)
-            String detail = String.format("%f to %f", currentComparison.getLowerRange(),
-                    currentComparison.getUpperRange());
+            String detail =
+                    String.format("%." + AdvancedConfigurations.accuracy + "f to %." + AdvancedConfigurations.accuracy + "f",
+                            currentComparison.getLowerRange(),
+                            currentComparison.getUpperRange());
             String weight = currentComparison.getWeight() + "";
-            String likeliness = "temp value";
+            String likeliness = currentComparison.getLikeliness() + "";
 
             this.resultsPanel.add(new ResultForm(featureName,detail,weight,likeliness).getPanel());
         }
@@ -175,7 +188,7 @@ public class MainApplication extends JFrame{
     void addSelectedFeature(){
         String featureName = this.featureComboBox.getSelectedItem().toString();
         ++featureId;
-        ComparisonData newFormData = new ComparisonData(featureName);
+        ComparisonData newFormData = new ComparisonData(featureName,0.0f,1.0f,1);
         allComparisonData.put(featureId,newFormData);
         this.comparisonPanel.add(new FeatureForm(featureId,newFormData,this).getPanel());
     }
@@ -228,6 +241,16 @@ public class MainApplication extends JFrame{
             loadTerrainData(file.toString(),terrainData,imageHelper);
             return true;
         }
+        return false;
+    }
+
+    boolean createTerrainFileChooserNative(TerrainData terrainData,TerrainImageHelper imageHelper){
+        FileDialog fileDialog = new FileDialog(this,"Select terrain file",FileDialog.LOAD);
+        fileDialog.setVisible(true);
+
+        terrainData.setTerrainName(fileDialog.getFile());
+        loadTerrainData(fileDialog.getDirectory() + fileDialog.getFile(),terrainData,imageHelper);
+
         return false;
     }
 

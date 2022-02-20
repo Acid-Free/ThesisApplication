@@ -27,11 +27,11 @@ public class FeatureForm{
     }
 
     public FeatureForm(int featureId,String featureName,String lowerRangeValue,String upperRangeValue,
-                       int rangeIndex,MainApplication window){
+                       int range,MainApplication window){
         this(featureId,featureName,window);
         lowerRangeField.setText(lowerRangeValue);
         upperRangeField.setText(upperRangeValue);
-        weightComboBox.setSelectedIndex(rangeIndex);
+        weightComboBox.setSelectedIndex(range - 1);
     }
 
     public FeatureForm(int featureId,String featureName,MainApplication window){
@@ -60,10 +60,14 @@ public class FeatureForm{
                     // To invoke catch
                     float input = Float.parseFloat(text);
 
-                    if(input < 0)
+                    if(input < 0){
+                        lowerRangeField.setText("0.0");
                         data.setLowerRange(0);
-                    else if(input > 1)
+                    }
+                    else if(input > 1){
+                        lowerRangeField.setText("1.0");
                         data.setLowerRange(1);
+                    }
                     else
                         data.setLowerRange(Float.parseFloat(text));
                 }catch(Exception f){
@@ -74,12 +78,10 @@ public class FeatureForm{
 
             @Override
             public void removeUpdate(DocumentEvent e){
-                System.out.println("test2");
             }
 
             @Override
             public void changedUpdate(DocumentEvent e){
-                System.out.println("test3");
             }
         });
 
@@ -91,14 +93,18 @@ public class FeatureForm{
                     // To invoke catch
                     float input = Float.parseFloat(text);
 
-                    if(input < 0)
+                    if(input < 0){
+                        upperRangeField.setText("0.0");
                         data.setUpperRange(0);
-                    else if(input > 1)
+                    }
+                    else if(input > 1){
+                        upperRangeField.setText("1.0");
                         data.setUpperRange(1);
+                    }
                     else
                         data.setUpperRange(Float.parseFloat(text));
                 }catch(Exception f){
-                    System.out.println("String is input instead of float");
+//                    System.out.println("String is input instead of float");
                     data.setUpperRange(-1);
                 }
             }
