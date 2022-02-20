@@ -156,6 +156,9 @@ public class MainApplication extends JFrame{
         this.resultsPanel.removeAll();
         this.overallPanel.removeAll();
 
+        float overallSimilarity = 0.0f;
+        int totalWeight = 0;
+
         // Computes the comparison value and similarity of the terrain data
         for(Map.Entry m: allComparisonData.entrySet()){
             // m.getKey() and m.getValue() mainly used inside this loop
@@ -177,12 +180,20 @@ public class MainApplication extends JFrame{
                             currentComparison.getLowerRange(),
                             currentComparison.getUpperRange());
             String weight = currentComparison.getWeight() + "";
-            String likeliness = currentComparison.getLikeliness() + "";
+            String likeliness =
+                    String.format("%." + AdvancedConfigurations.accuracy + "f",currentComparison.getLikeliness());
+
+            // Compute overall similarity
+            totalWeight += currentComparison.getWeight();
+            overallSimilarity += currentComparison.getLikeliness() * currentComparison.getWeight();
+
 
             this.resultsPanel.add(new ResultForm(featureName,detail,weight,likeliness).getPanel());
         }
 
-        this.overallPanel.add(new ResultForm("Overall","","","94%").getPanel());
+        overallSimilarity /= totalWeight;
+        this.overallPanel.add(new ResultForm("Overall","","",
+                String.format("%." + AdvancedConfigurations.accuracy + "f",overallSimilarity)).getPanel());
     }
 
     void addSelectedFeature(){
@@ -365,8 +376,6 @@ public class MainApplication extends JFrame{
         if(label4Font != null) label4.setFont(label4Font);
         label4.setText("Dimension");
         panel7.add(label4,new GridConstraints(0,0,1,2,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
-        final Spacer spacer3 = new Spacer();
-        panel7.add(spacer3,new GridConstraints(8,0,1,2,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
         final JLabel label5 = new JLabel();
         Font label5Font = this.$$$getFont$$$(null,-1,18,label5.getFont());
         if(label5Font != null) label5.setFont(label5Font);
@@ -423,14 +432,16 @@ public class MainApplication extends JFrame{
         if(terrain1HeightFont != null) terrain1Height.setFont(terrain1HeightFont);
         terrain1Height.setText("");
         panel7.add(terrain1Height,new GridConstraints(2,1,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        final Spacer spacer3 = new Spacer();
+        panel7.add(spacer3,new GridConstraints(3,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
         final Spacer spacer4 = new Spacer();
-        panel7.add(spacer4,new GridConstraints(3,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
+        panel7.add(spacer4,new GridConstraints(8,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
         final JPanel panel8 = new JPanel();
         panel8.setLayout(new GridLayoutManager(1,1,new Insets(0,0,0,0),-1,-1));
         panel6.add(panel8,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         terrainImageLabel1 = new JLabel();
         terrainImageLabel1.setText("");
-        panel8.add(terrainImageLabel1,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(380,380),0,false));
+        panel8.add(terrainImageLabel1,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(370,370),0,false));
         final JPanel panel9 = new JPanel();
         panel9.setLayout(new GridLayoutManager(3,1,new Insets(5,5,5,5),-1,-1));
         panel9.setBackground(new Color(-12105140));
@@ -446,9 +457,9 @@ public class MainApplication extends JFrame{
         panel9.add(panel10,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         terrainImageLabel2 = new JLabel();
         terrainImageLabel2.setText("");
-        panel10.add(terrainImageLabel2,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(380,380),0,false));
+        panel10.add(terrainImageLabel2,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(370,370),0,false));
         final JPanel panel11 = new JPanel();
-        panel11.setLayout(new GridLayoutManager(9,2,new Insets(0,0,0,0),-1,-1,true,false));
+        panel11.setLayout(new GridLayoutManager(9,2,new Insets(0,0,0,0),-1,-1));
         panel11.setBackground(new Color(-12105140));
         panel9.add(panel11,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         final JLabel label11 = new JLabel();
@@ -498,8 +509,6 @@ public class MainApplication extends JFrame{
         panel11.add(label17,new GridConstraints(7,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final Spacer spacer5 = new Spacer();
         panel11.add(spacer5,new GridConstraints(3,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
-        final Spacer spacer6 = new Spacer();
-        panel11.add(spacer6,new GridConstraints(8,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
         terrain2Highest = new JLabel();
         Font terrain2HighestFont = this.$$$getFont$$$(null,-1,14,terrain2Highest.getFont());
         if(terrain2HighestFont != null) terrain2Highest.setFont(terrain2HighestFont);
@@ -515,6 +524,8 @@ public class MainApplication extends JFrame{
         if(terrain2LowestFont != null) terrain2Lowest.setFont(terrain2LowestFont);
         terrain2Lowest.setText("");
         panel11.add(terrain2Lowest,new GridConstraints(7,1,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        final Spacer spacer6 = new Spacer();
+        panel11.add(spacer6,new GridConstraints(8,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
         panelTerrainFeaturesMain = new JPanel();
         panelTerrainFeaturesMain.setLayout(new GridLayoutManager(5,1,new Insets(5,5,5,5),-1,-1));
         panelTerrainFeaturesMain.setBackground(new Color(-12105140));

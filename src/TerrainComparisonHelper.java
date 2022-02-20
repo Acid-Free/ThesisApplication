@@ -87,7 +87,6 @@ public class TerrainComparisonHelper{
             default:
                 System.out.println("Invalid comparison type (horizontal, vertical, and diagonal)");
         }
-        System.out.println("Test: " + (comparisonData.getTerrain2Result()));
         return (1 - Math.abs(comparisonData.getTerrain1Result() / terrain1Max - comparisonData.getTerrain2Result() / terrain2Max)) * 100;
     }
 
