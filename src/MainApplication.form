@@ -573,12 +573,12 @@
                     <properties>
                       <font size="14"/>
                       <model>
-                        <item value="Levels"/>
-                        <item value="Levels Exclude "/>
-                        <item value="Max Area"/>
+                        <item value="Level"/>
+                        <item value="Exclude Level"/>
                         <item value="Max Horizontal"/>
                         <item value="Max Vertical"/>
                         <item value="Max Diagonal"/>
+                        <item value="Max Area"/>
                       </model>
                     </properties>
                   </component>
@@ -723,7 +723,7 @@
                   </grid>
                 </children>
               </grid>
-              <grid id="1e6a4" binding="rightPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
+              <grid id="1e6a4" binding="rightPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="0">
                 <margin top="5" left="5" bottom="5" right="5"/>
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="7" anchor="0" fill="3" indent="1" use-parent-layout="false">
@@ -808,6 +808,17 @@
                         <children/>
                       </grid>
                     </children>
+                  </grid>
+                  <grid id="f549b" binding="overallPanel" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <background color="-13157828"/>
+                    </properties>
+                    <border type="none"/>
+                    <children/>
                   </grid>
                 </children>
               </grid>

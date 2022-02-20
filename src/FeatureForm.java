@@ -3,8 +3,11 @@ TODO: Update ComparisonData after updating the components in the form
 */
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,14 +16,21 @@ public class FeatureForm{
     private JButton testButton;
     private JComboBox weightComboBox;
     private JPanel panel;
-    private JTextField lowerRange;
-    private JTextField upperRange;
+    private JTextField lowerRangeField;
+    private JTextField upperRangeField;
+    private ComparisonData data = new ComparisonData("Temporary");
+
+    public FeatureForm(int featureId,ComparisonData data,MainApplication window){
+        this(featureId,data.getFeatureName(),data.getLowerRange() + "",data.getUpperRange() + "",data.getWeight(),
+                window);
+        this.data = data;
+    }
 
     public FeatureForm(int featureId,String featureName,String lowerRangeValue,String upperRangeValue,
                        int rangeIndex,MainApplication window){
         this(featureId,featureName,window);
-        lowerRange.setText(lowerRangeValue);
-        upperRange.setText(upperRangeValue);
+        lowerRangeField.setText(lowerRangeValue);
+        upperRangeField.setText(upperRangeValue);
         weightComboBox.setSelectedIndex(rangeIndex);
     }
 
@@ -39,6 +49,76 @@ public class FeatureForm{
 
             public void mouseExited(MouseEvent evt){
                 testButton.setBackground(UIManager.getColor("control"));
+            }
+        });
+
+        lowerRangeField.getDocument().addDocumentListener(new DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e){
+                String text = lowerRangeField.getText();
+                try{
+                    // To invoke catch
+                    float input = Float.parseFloat(text);
+
+                    if(input < 0)
+                        data.setLowerRange(0);
+                    else if(input > 1)
+                        data.setLowerRange(1);
+                    else
+                        data.setLowerRange(Float.parseFloat(text));
+                }catch(Exception f){
+//                    System.out.println("String is input instead of float");
+                    data.setLowerRange(-1);
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e){
+                System.out.println("test2");
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e){
+                System.out.println("test3");
+            }
+        });
+
+        upperRangeField.getDocument().addDocumentListener(new DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e){
+                String text = upperRangeField.getText();
+                try{
+                    // To invoke catch
+                    float input = Float.parseFloat(text);
+
+                    if(input < 0)
+                        data.setUpperRange(0);
+                    else if(input > 1)
+                        data.setUpperRange(1);
+                    else
+                        data.setUpperRange(Float.parseFloat(text));
+                }catch(Exception f){
+                    System.out.println("String is input instead of float");
+                    data.setUpperRange(-1);
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e){
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e){
+
+            }
+        });
+
+        weightComboBox.addActionListener(e -> {
+            try{
+                data.setWeight(weightComboBox.getSelectedIndex() + 1);
+            }catch(NullPointerException f){
+//                System.out.println("WeightComboBox is null");
             }
         });
     }
@@ -64,11 +144,22 @@ public class FeatureForm{
      */
     private void $$$setupUI$$$(){
         panel = new JPanel();
-        panel.setLayout(new GridLayoutManager(1,3,new Insets(0,0,0,0),-1,-1,true,false));
+        panel.setLayout(new GridLayoutManager(1,2,new Insets(0,0,0,0),-1,-1));
         testButton = new JButton();
         testButton.setText("Max Horizontal");
-        panel.add(testButton,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        panel.add(testButton,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(150,-1),new Dimension(150,-1),0,false));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1,5,new Insets(0,0,0,0),-1,-1));
+        panel.add(panel1,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
+        final JLabel label1 = new JLabel();
+        label1.setText("to");
+        panel1.add(label1,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        lowerRangeField = new JTextField();
+        panel1.add(lowerRangeField,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(60,-1),new Dimension(60,-1),0,false));
+        upperRangeField = new JTextField();
+        panel1.add(upperRangeField,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(60,-1),new Dimension(60,-1),0,false));
         weightComboBox = new JComboBox();
+        weightComboBox.setMaximumRowCount(10);
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("1");
         defaultComboBoxModel1.addElement("2");
@@ -81,18 +172,9 @@ public class FeatureForm{
         defaultComboBoxModel1.addElement("9");
         defaultComboBoxModel1.addElement("10");
         weightComboBox.setModel(defaultComboBoxModel1);
-        panel.add(weightComboBox,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1,3,new Insets(0,0,0,0),-1,-1));
-        panel.add(panel1,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
-        lowerRange = new JTextField();
-        lowerRange.setText("");
-        panel1.add(lowerRange,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(40,-1),new Dimension(40,-1),0,false));
-        upperRange = new JTextField();
-        panel1.add(upperRange,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(40,-1),new Dimension(40,-1),0,false));
-        final JLabel label1 = new JLabel();
-        label1.setText("to");
-        panel1.add(label1,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        panel1.add(weightComboBox,new GridConstraints(0,4,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(50,-1),new Dimension(50,-1),0,false));
+        final Spacer spacer1 = new Spacer();
+        panel1.add(spacer1,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_WANT_GROW,1,null,null,null,0,false));
     }
 
     /**

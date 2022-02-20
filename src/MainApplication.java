@@ -59,6 +59,7 @@ public class MainApplication extends JFrame{
     private JButton proceed0;
     private JPanel testPanel;
     private JPanel resultsPanel;
+    private JPanel overallPanel;
     private JScrollPane scrollPane;
 
     HashMap<Integer,ComparisonData> allComparisonData = new HashMap<>();
@@ -73,11 +74,11 @@ public class MainApplication extends JFrame{
             e.printStackTrace();
         }
 
-        TerrainImageHelper imageHelper = new TerrainImageHelper();
-        TerrainComparisonHelper comparisonHelper = new TerrainComparisonHelper();
-
         TerrainData terrain1 = new TerrainData();
         TerrainData terrain2 = new TerrainData();
+
+        TerrainImageHelper imageHelper = new TerrainImageHelper();
+        TerrainComparisonHelper comparisonHelper = new TerrainComparisonHelper();
 
         MainApplication window = new MainApplication();
         CardLayout c1 = (CardLayout)window.cardPanel.getLayout();
@@ -98,7 +99,7 @@ public class MainApplication extends JFrame{
 
         window.proceed2.addActionListener(e -> {
             c1.next(window.getContentPane());
-            window.updateResultsWindow();
+            window.updateResultsWindow(comparisonHelper,terrain1,terrain2);
         });
 
         window.helpButton.addActionListener(e -> c1.previous(window.getContentPane()));
@@ -123,13 +124,14 @@ public class MainApplication extends JFrame{
 
         // default terrain feature
         ++window.featureId;
-        window.allComparisonData.put(window.featureId,new ComparisonData("Levels"));
-        window.comparisonPanel.add(new FeatureForm(window.featureId,"Levels","0.35","0.6",0,window).getPanel());
+        ComparisonData defaultComparisonData = new ComparisonData("Level",0.0f,1.0f,0);
+        window.allComparisonData.put(window.featureId,defaultComparisonData);
+        window.comparisonPanel.add(new FeatureForm(window.featureId,defaultComparisonData,window).getPanel());
 
         // General application window configurations
         window.setContentPane(window.cardPanel);
         window.setResizable(false);
-        window.setTitle("CompTerra 0.0.2");
+        window.setTitle("CompTerra 0.0.3");
         window.setSize(1280,720);
         window.setVisible(true);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -138,29 +140,44 @@ public class MainApplication extends JFrame{
     }
 
     // TODO: Currently placeholder, update after completing the algorithms for terrain features and comparison
-    void updateResultsWindow(){
+    void updateResultsWindow(TerrainComparisonHelper comparisonHelper,TerrainData terrain1,TerrainData terrain2){
         // TODO: Try to find a more elegant way to fix this (unnecessary reload)
         this.resultsPanel.removeAll();
+        this.overallPanel.removeAll();
 
+        // Computes the comparison value and similarity of the terrain data
         for(Map.Entry m: allComparisonData.entrySet()){
             // m.getKey() and m.getValue() mainly used inside this loop
             // TODO: fix this suspicious call (double downcast?)
             ComparisonData currentComparison = allComparisonData.get(m.getKey());
+
+//            String featureName = currentComparison.getFeatureName();
+//            String detail = String.format("%.2f to %.2f",currentComparison.getLowerRange(),currentComparison.getUpperRange());
+//            String weight = String.format("%d",currentComparison.getWeight());
+//            String likeliness = "94% (placeholder)";
+//            this.resultsPanel.add(new ResultForm(featureName,detail,weight,likeliness).getPanel());
+
+            comparisonHelper.computeFeature(currentComparison,terrain1,terrain2);
+
             String featureName = currentComparison.getFeatureName();
-            String detail = String.format("%.2f to %.2f",currentComparison.getLowerRange(),currentComparison.getUpperRange());
-            String weight = String.format("%d",currentComparison.getWeight());
-            String likeliness = "94% (placeholder)";
+            // TODO: Update this when feature lists have different parameters (details)
+            String detail = String.format("%f to %f", currentComparison.getLowerRange(),
+                    currentComparison.getUpperRange());
+            String weight = currentComparison.getWeight() + "";
+            String likeliness = "temp value";
+
             this.resultsPanel.add(new ResultForm(featureName,detail,weight,likeliness).getPanel());
         }
 
-        this.resultsPanel.add(new ResultForm("Overall","","","94%").getPanel());
+        this.overallPanel.add(new ResultForm("Overall","","","94%").getPanel());
     }
 
     void addSelectedFeature(){
         String featureName = this.featureComboBox.getSelectedItem().toString();
         ++featureId;
-        allComparisonData.put(featureId,new ComparisonData(featureName));
-        this.comparisonPanel.add(new FeatureForm(featureId,featureName,this).getPanel());
+        ComparisonData newFormData = new ComparisonData(featureName);
+        allComparisonData.put(featureId,newFormData);
+        this.comparisonPanel.add(new FeatureForm(featureId,newFormData,this).getPanel());
     }
 
     void removeFeature(int featureId){
@@ -513,12 +530,12 @@ public class MainApplication extends JFrame{
         Font featureComboBoxFont = this.$$$getFont$$$(null,-1,14,featureComboBox.getFont());
         if(featureComboBoxFont != null) featureComboBox.setFont(featureComboBoxFont);
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("Levels");
-        defaultComboBoxModel1.addElement("Levels Exclude");
-        defaultComboBoxModel1.addElement("Max Area");
+        defaultComboBoxModel1.addElement("Level");
+        defaultComboBoxModel1.addElement("Exclude Level");
         defaultComboBoxModel1.addElement("Max Horizontal");
         defaultComboBoxModel1.addElement("Max Vertical");
         defaultComboBoxModel1.addElement("Max Diagonal");
+        defaultComboBoxModel1.addElement("Max Area");
         featureComboBox.setModel(defaultComboBoxModel1);
         panelTerrainFeaturesMain.add(featureComboBox,new GridConstraints(3,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         return2 = new JButton();
@@ -573,7 +590,7 @@ public class MainApplication extends JFrame{
         resultsTerrain2.setText("");
         panel16.add(resultsTerrain2,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(300,300),0,false));
         rightPanel = new JPanel();
-        rightPanel.setLayout(new GridLayoutManager(2,1,new Insets(5,5,5,5),-1,0));
+        rightPanel.setLayout(new GridLayoutManager(3,1,new Insets(5,5,5,5),-1,0));
         rightPanel.setBackground(new Color(-12105140));
         main3Panel.add(rightPanel,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,new Dimension(890,-1),null,null,1,false));
         final JLabel label24 = new JLabel();
@@ -606,6 +623,8 @@ public class MainApplication extends JFrame{
         label28.setText("Likeliness");
         panel17.add(label28,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(50,15),null,0,false));
         panel17.add(resultsPanel,new GridConstraints(1,0,1,4,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
+        overallPanel.setBackground(new Color(-13157828));
+        rightPanel.add(overallPanel,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         final JLabel label29 = new JLabel();
         Font label29Font = this.$$$getFont$$$(null,-1,24,label29.getFont());
         if(label29Font != null) label29.setFont(label29Font);
@@ -658,5 +677,8 @@ public class MainApplication extends JFrame{
 
         resultsPanel = new JPanel();
         resultsPanel.setLayout(new BoxLayout(resultsPanel,BoxLayout.Y_AXIS));
+
+        overallPanel = new JPanel();
+        overallPanel.setLayout(new BoxLayout(overallPanel,BoxLayout.Y_AXIS));
     }
 }
