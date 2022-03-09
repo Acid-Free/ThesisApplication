@@ -56,7 +56,9 @@
         <constraints>
           <card name="Card1"/>
         </constraints>
-        <properties/>
+        <properties>
+          <enabled value="true"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="72fe3" class="javax.swing.JLabel">
@@ -78,16 +80,23 @@
             <children>
               <component id="36649" class="javax.swing.JButton" binding="selectTerrainData1Button" default-binding="true">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="398" height="-1"/>
+                    <maximum-size width="398" height="-1"/>
+                  </grid>
                 </constraints>
                 <properties>
                   <font size="18"/>
+                  <horizontalTextPosition value="11"/>
                   <text value="Select Terrain Data 1"/>
                 </properties>
               </component>
               <component id="606c8" class="javax.swing.JButton" binding="selectTerrainData2Button" default-binding="true">
                 <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="398" height="-1"/>
+                    <maximum-size width="398" height="-1"/>
+                  </grid>
                 </constraints>
                 <properties>
                   <font size="18"/>
@@ -96,7 +105,10 @@
               </component>
               <component id="1eb78" class="javax.swing.JButton" binding="helpButton">
                 <constraints>
-                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="398" height="-1"/>
+                    <maximum-size width="398" height="-1"/>
+                  </grid>
                 </constraints>
                 <properties>
                   <font size="18"/>
@@ -152,7 +164,8 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-12105140"/>
+                  <background color="-4473925"/>
+                  <enabled value="true"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -172,7 +185,7 @@
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-12105140"/>
+                      <background color="-3618616"/>
                     </properties>
                     <border type="none"/>
                     <children>
@@ -325,7 +338,7 @@
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-12105140"/>
+                  <background color="-4473925"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -365,7 +378,7 @@
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-12105140"/>
+                      <background color="-3618616"/>
                     </properties>
                     <border type="none"/>
                     <children>
@@ -497,7 +510,7 @@
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-12105140"/>
+                  <background color="-4473925"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -516,7 +529,7 @@
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-12828863"/>
+                      <background color="-3618616"/>
                     </properties>
                     <border type="none"/>
                     <children>
@@ -643,11 +656,11 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <background color="-12105140"/>
+                      <background color="-4473925"/>
                     </properties>
                     <border type="none"/>
                     <children>
-                      <component id="b029a" class="javax.swing.JLabel">
+                      <component id="b029a" class="javax.swing.JLabel" binding="resultsTerrain1Name">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -686,11 +699,11 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <background color="-12105140"/>
+                      <background color="-4473925"/>
                     </properties>
                     <border type="none"/>
                     <children>
-                      <component id="ba25f" class="javax.swing.JLabel">
+                      <component id="ba25f" class="javax.swing.JLabel" binding="resultsTerrain2Name">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -731,7 +744,7 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-12105140"/>
+                  <background color="-4473925"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -740,6 +753,7 @@
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="4" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <background color="-4473925"/>
                       <font size="18"/>
                       <text value="Comparison Results                                                        "/>
                     </properties>

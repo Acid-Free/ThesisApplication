@@ -45,10 +45,19 @@ public class TerrainComparisonHelper{
                     System.out.println(comparisonData);
                     break;
                 case "Max Diagonal":
-
+                    comparisonData.setTerrain1Result(computeMaxDiagonalFeature(comparisonData,terrain1));
+                    comparisonData.setTerrain2Result(computeMaxDiagonalFeature(comparisonData,terrain2));
+                    comparisonData.setLikeliness(computeLengthLikeliness("diagonal", comparisonData, terrain1,
+                            terrain2));
+                    // Debug
+                    System.out.println(comparisonData);
                     break;
                 case "Max Area":
-
+                    comparisonData.setTerrain1Result(computeMaxAreaFeature(comparisonData,terrain1));
+                    comparisonData.setTerrain2Result(computeMaxAreaFeature(comparisonData,terrain2));
+                    comparisonData.setLikeliness(computePercentageLikeliness(comparisonData));
+                    // Debug
+                    System.out.println(comparisonData);
                     break;
                 default:
                     System.out.println("Invalid feature name detected when trying to compute feature: " + comparisonData.getFeatureName());
@@ -172,23 +181,73 @@ public class TerrainComparisonHelper{
         float max = comparisonData.getUpperRange();
 
         int longest = 0;
-        for (int i = 0; i < data.length; ++i) {
+        for (int h = 0; h < data[0].length; ++h) {
             int counter = 0;
-            for (int j = 0; j < data[0].length; ++j) {
-                if (data[i][j] >= min && data[i][j] <= max) {
+            int i = 0;
+            int j = h;
+            // Checks if the current navigators are within the input dimension
+            while(j >= 0 && i < data.length){
+                if(data[i][j] >= min && data[i][j] <= max){
                     ++counter;
                 }
-                else if (counter > longest)
+                else if(counter > longest)
                     longest = counter;
+
+                ++i;
+                --j;
             }
             if (counter > longest)
                 longest = counter;
         }
-
         return longest;
     }
 
-    float computeMaxAreaFeature(float min, float max) {
-        return 0.0f;
+    float computeMaxAreaFeature(ComparisonData comparisonData, TerrainData terrainData) {
+        float[][] data = terrainData.getTerrainData();
+        boolean[][] marked = new boolean[data.length][data[0].length];
+        float min = comparisonData.getLowerRange();
+        float max = comparisonData.getUpperRange();
+
+        int largestArea = 0;
+        int currentArea = 0;
+        for (int i = 0; i < data.length; ++i) {
+            for (int j = 0; j < data[i].length; ++j) {
+                currentArea = floodFill(data, marked, i, j, min, max);
+
+                if (currentArea > largestArea)
+                    largestArea = currentArea;
+            }
+        }
+
+        System.out.println("Max Area: " + largestArea + " : Total Area: " + data.length * data[0].length);
+        return ((float)largestArea / (data.length * data[0].length)) * 100;
+    }
+
+    int test = 0;
+    int floodFill(float[][] data, boolean[][] marked, int i, int j, float min, float max) {
+        int counter = 0;
+
+        if (i >= 0 && i < data.length && j >= 0 && j < data[i].length) {
+            if (marked[i][j])
+                return counter;
+            else if  (data[i][j] >= min && data[i][j] <= max)
+                ++counter;
+
+//            System.out.println(i + ": " + j);
+            marked[i][j] = true;
+            System.out.println(++test);
+
+            // Navigate...
+            // north
+            counter += floodFill(data, marked, i - 1, j, min, max);
+            // south
+            counter += floodFill(data, marked, i + 1, j, min, max);
+            // east
+            counter += floodFill(data, marked, i, j + 1, min, max);
+            // west
+            counter += floodFill(data, marked, i, j - 1, min, max);
+        }
+
+        return counter;
     }
 }

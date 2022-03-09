@@ -2,6 +2,9 @@
 Observations:
 Level and Exclude Level are fundamentally the same
 
+Recommendations:
+Show the users actual terrain feature values instead of just comparison values
+
 TODO: force users to input two terrain files and input at least one terrain feature before proceeding
 TODO: add a default terrain feature filled with range and weight
 TODO: enforce a max terrain feature (14) as it overflows otherwise
@@ -63,6 +66,8 @@ public class MainApplication extends JFrame{
     private JPanel testPanel;
     private JPanel resultsPanel;
     private JPanel overallPanel;
+    private JLabel resultsTerrain1Name;
+    private JLabel resultsTerrain2Name;
     private JScrollPane scrollPane;
 
     HashMap<Integer,ComparisonData> allComparisonData = new HashMap<>();
@@ -71,11 +76,11 @@ public class MainApplication extends JFrame{
     public static void main(String[] args) throws IOException{
 
         // Custom UI theme
-        try{
-            UIManager.setLookAndFeel(new DarculaLaf());
-        }catch(UnsupportedLookAndFeelException e){
-            e.printStackTrace();
-        }
+//        try{
+//            UIManager.setLookAndFeel(new DarculaLaf());
+//        }catch(UnsupportedLookAndFeelException e){
+//            e.printStackTrace();
+//        }
 
         TerrainData terrain1 = new TerrainData();
         TerrainData terrain2 = new TerrainData();
@@ -114,16 +119,16 @@ public class MainApplication extends JFrame{
 //            if(window.createTerrainFileChooser(terrain1,imageHelper))
 //                window.selectTerrainData1Button.setText(terrain1.getTerrainName());
             // Approach B
-            window.createTerrainFileChooserNative(terrain1,imageHelper);
-            window.selectTerrainData1Button.setText(terrain1.getTerrainName());
+            if(window.createTerrainFileChooserNative(terrain1,imageHelper))
+                window.selectTerrainData1Button.setText(terrain1.getTerrainName());
         });
         window.selectTerrainData2Button.addActionListener(e -> {
             // Approach A
 //            if(window.createTerrainFileChooser(terrain2,imageHelper))
 //                window.selectTerrainData2Button.setText(terrain2.getTerrainName());
             // Approach B
-            window.createTerrainFileChooserNative(terrain2,imageHelper);
-            window.selectTerrainData2Button.setText(terrain2.getTerrainName());
+            if(window.createTerrainFileChooserNative(terrain2,imageHelper))
+                window.selectTerrainData2Button.setText(terrain2.getTerrainName());
         });
 
         window.addFeatureButton.addActionListener(e -> {
@@ -152,6 +157,10 @@ public class MainApplication extends JFrame{
 
     // TODO: Currently placeholder, update after completing the algorithms for terrain features and comparison
     void updateResultsWindow(TerrainComparisonHelper comparisonHelper,TerrainData terrain1,TerrainData terrain2){
+
+        resultsTerrain1Name.setText(terrain1.getTerrainName());
+        resultsTerrain2Name.setText(terrain2.getTerrainName());
+
         // TODO: Try to find a more elegant way to fix this (unnecessary reload)
         this.resultsPanel.removeAll();
         this.overallPanel.removeAll();
@@ -230,8 +239,8 @@ public class MainApplication extends JFrame{
     void initializeIcons(TerrainData terrain1,TerrainData terrain2,
                          TerrainImageHelper imageHelper){
         // 385 is the maximum width of the JPanel that holds the JLabel for the icon (res 1280 x 720) before expanding
-        ImageIcon terrainIcon1 = imageHelper.getTerrainImage(terrain1.getTerrainPath(),385,385);
-        ImageIcon terrainIcon2 = imageHelper.getTerrainImage(terrain2.getTerrainPath(),385,385);
+        ImageIcon terrainIcon1 = imageHelper.getTerrainImage(terrain1.getTerrainPath(),370,370);
+        ImageIcon terrainIcon2 = imageHelper.getTerrainImage(terrain2.getTerrainPath(),370,370);
         ImageIcon terrainIcon3 = imageHelper.getTerrainImage(terrain1.getTerrainPath(),250,250);
         ImageIcon terrainIcon4 = imageHelper.getTerrainImage(terrain2.getTerrainPath(),250,250);
 
@@ -259,10 +268,18 @@ public class MainApplication extends JFrame{
         FileDialog fileDialog = new FileDialog(this,"Select terrain file",FileDialog.LOAD);
         fileDialog.setVisible(true);
 
-        terrainData.setTerrainName(fileDialog.getFile());
-        loadTerrainData(fileDialog.getDirectory() + fileDialog.getFile(),terrainData,imageHelper);
-
-        return false;
+        try{
+            String name = fileDialog.getFile();
+            if(name.length() > 18)
+                terrainData.setTerrainName(String.format("%.18s...",name));
+            else
+                terrainData.setTerrainName(name);
+            loadTerrainData(fileDialog.getDirectory() + fileDialog.getFile(),terrainData,imageHelper);
+        }catch(NullPointerException e){
+            System.out.println("Input selection cancelled.");
+            return false;
+        }
+        return true;
     }
 
     void loadTerrainData(String terrainPath,TerrainData terrainData,TerrainImageHelper imageHelper){
@@ -315,6 +332,7 @@ public class MainApplication extends JFrame{
         panel0.add(spacer1,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_WANT_GROW,1,null,null,null,0,false));
         panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(3,3,new Insets(10,30,10,30),-1,-1));
+        panel1.setEnabled(true);
         cardPanel.add(panel1,"Card1");
         final JLabel label2 = new JLabel();
         Font label2Font = this.$$$getFont$$$(null,-1,24,label2.getFont());
@@ -327,18 +345,19 @@ public class MainApplication extends JFrame{
         selectTerrainData1Button = new JButton();
         Font selectTerrainData1ButtonFont = this.$$$getFont$$$(null,-1,18,selectTerrainData1Button.getFont());
         if(selectTerrainData1ButtonFont != null) selectTerrainData1Button.setFont(selectTerrainData1ButtonFont);
+        selectTerrainData1Button.setHorizontalTextPosition(11);
         selectTerrainData1Button.setText("Select Terrain Data 1");
-        panel4.add(selectTerrainData1Button,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        panel4.add(selectTerrainData1Button,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(398,-1),new Dimension(398,-1),0,false));
         selectTerrainData2Button = new JButton();
         Font selectTerrainData2ButtonFont = this.$$$getFont$$$(null,-1,18,selectTerrainData2Button.getFont());
         if(selectTerrainData2ButtonFont != null) selectTerrainData2Button.setFont(selectTerrainData2ButtonFont);
         selectTerrainData2Button.setText("Select Terrain Data 2");
-        panel4.add(selectTerrainData2Button,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        panel4.add(selectTerrainData2Button,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(398,-1),new Dimension(398,-1),0,false));
         helpButton = new JButton();
         Font helpButtonFont = this.$$$getFont$$$(null,-1,18,helpButton.getFont());
         if(helpButtonFont != null) helpButton.setFont(helpButtonFont);
         helpButton.setText("Help");
-        panel4.add(helpButton,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        panel4.add(helpButton,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(398,-1),new Dimension(398,-1),0,false));
         proceed1 = new JButton();
         Font proceed1Font = this.$$$getFont$$$(null,-1,16,proceed1.getFont());
         if(proceed1Font != null) proceed1.setFont(proceed1Font);
@@ -359,7 +378,8 @@ public class MainApplication extends JFrame{
         panel2.add(panel5,new GridConstraints(1,0,1,3,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,1,false));
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridLayoutManager(3,1,new Insets(5,5,5,5),-1,-1));
-        panel6.setBackground(new Color(-12105140));
+        panel6.setBackground(new Color(-4473925));
+        panel6.setEnabled(true);
         panel5.add(panel6,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         terrain1Name = new JLabel();
         Font terrain1NameFont = this.$$$getFont$$$(null,-1,18,terrain1Name.getFont());
@@ -369,7 +389,7 @@ public class MainApplication extends JFrame{
         panel6.add(terrain1Name,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JPanel panel7 = new JPanel();
         panel7.setLayout(new GridLayoutManager(9,2,new Insets(0,0,0,0),-1,-1));
-        panel7.setBackground(new Color(-12105140));
+        panel7.setBackground(new Color(-3618616));
         panel6.add(panel7,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         final JLabel label4 = new JLabel();
         Font label4Font = this.$$$getFont$$$(null,-1,18,label4.getFont());
@@ -444,7 +464,7 @@ public class MainApplication extends JFrame{
         panel8.add(terrainImageLabel1,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(370,370),0,false));
         final JPanel panel9 = new JPanel();
         panel9.setLayout(new GridLayoutManager(3,1,new Insets(5,5,5,5),-1,-1));
-        panel9.setBackground(new Color(-12105140));
+        panel9.setBackground(new Color(-4473925));
         panel5.add(panel9,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         terrain2Name = new JLabel();
         Font terrain2NameFont = this.$$$getFont$$$(null,-1,18,terrain2Name.getFont());
@@ -460,7 +480,7 @@ public class MainApplication extends JFrame{
         panel10.add(terrainImageLabel2,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(370,370),0,false));
         final JPanel panel11 = new JPanel();
         panel11.setLayout(new GridLayoutManager(9,2,new Insets(0,0,0,0),-1,-1));
-        panel11.setBackground(new Color(-12105140));
+        panel11.setBackground(new Color(-3618616));
         panel9.add(panel11,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         final JLabel label11 = new JLabel();
         Font label11Font = this.$$$getFont$$$(null,-1,18,label11.getFont());
@@ -528,7 +548,7 @@ public class MainApplication extends JFrame{
         panel11.add(spacer6,new GridConstraints(8,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_VERTICAL,1,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
         panelTerrainFeaturesMain = new JPanel();
         panelTerrainFeaturesMain.setLayout(new GridLayoutManager(5,1,new Insets(5,5,5,5),-1,-1));
-        panelTerrainFeaturesMain.setBackground(new Color(-12105140));
+        panelTerrainFeaturesMain.setBackground(new Color(-4473925));
         panel5.add(panelTerrainFeaturesMain,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JLabel label18 = new JLabel();
         Font label18Font = this.$$$getFont$$$(null,-1,18,label18.getFont());
@@ -537,7 +557,7 @@ public class MainApplication extends JFrame{
         panelTerrainFeaturesMain.add(label18,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JPanel panel12 = new JPanel();
         panel12.setLayout(new GridLayoutManager(1,3,new Insets(0,0,0,0),-1,-1));
-        panel12.setBackground(new Color(-12828863));
+        panel12.setBackground(new Color(-3618616));
         panelTerrainFeaturesMain.add(panel12,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JLabel label19 = new JLabel();
         Font label19Font = this.$$$getFont$$$(null,-1,16,label19.getFont());
@@ -595,13 +615,13 @@ public class MainApplication extends JFrame{
         main3Panel.add(leftPanel,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         final JPanel panel13 = new JPanel();
         panel13.setLayout(new GridLayoutManager(2,1,new Insets(5,5,5,5),-1,-1));
-        panel13.setBackground(new Color(-12105140));
+        panel13.setBackground(new Color(-4473925));
         leftPanel.add(panel13,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,new Dimension(300,300),0,false));
-        final JLabel label22 = new JLabel();
-        Font label22Font = this.$$$getFont$$$(null,-1,18,label22.getFont());
-        if(label22Font != null) label22.setFont(label22Font);
-        label22.setText("Terrain 1 Name");
-        panel13.add(label22,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        resultsTerrain1Name = new JLabel();
+        Font resultsTerrain1NameFont = this.$$$getFont$$$(null,-1,18,resultsTerrain1Name.getFont());
+        if(resultsTerrain1NameFont != null) resultsTerrain1Name.setFont(resultsTerrain1NameFont);
+        resultsTerrain1Name.setText("Terrain 1 Name");
+        panel13.add(resultsTerrain1Name,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JPanel panel14 = new JPanel();
         panel14.setLayout(new GridLayoutManager(1,1,new Insets(0,0,0,0),-1,-1));
         panel13.add(panel14,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
@@ -610,13 +630,13 @@ public class MainApplication extends JFrame{
         panel14.add(resultsTerrain1,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(300,300),0,false));
         final JPanel panel15 = new JPanel();
         panel15.setLayout(new GridLayoutManager(2,1,new Insets(5,5,5,5),-1,-1));
-        panel15.setBackground(new Color(-12105140));
+        panel15.setBackground(new Color(-4473925));
         leftPanel.add(panel15,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,new Dimension(300,300),0,false));
-        final JLabel label23 = new JLabel();
-        Font label23Font = this.$$$getFont$$$(null,-1,18,label23.getFont());
-        if(label23Font != null) label23.setFont(label23Font);
-        label23.setText("Terrain 2 Name");
-        panel15.add(label23,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        resultsTerrain2Name = new JLabel();
+        Font resultsTerrain2NameFont = this.$$$getFont$$$(null,-1,18,resultsTerrain2Name.getFont());
+        if(resultsTerrain2NameFont != null) resultsTerrain2Name.setFont(resultsTerrain2NameFont);
+        resultsTerrain2Name.setText("Terrain 2 Name");
+        panel15.add(resultsTerrain2Name,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JPanel panel16 = new JPanel();
         panel16.setLayout(new GridLayoutManager(1,1,new Insets(0,0,0,0),-1,-1));
         panel15.add(panel16,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
@@ -625,45 +645,46 @@ public class MainApplication extends JFrame{
         panel16.add(resultsTerrain2,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,new Dimension(300,300),0,false));
         rightPanel = new JPanel();
         rightPanel.setLayout(new GridLayoutManager(3,1,new Insets(5,5,5,5),-1,0));
-        rightPanel.setBackground(new Color(-12105140));
+        rightPanel.setBackground(new Color(-4473925));
         main3Panel.add(rightPanel,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,new Dimension(890,-1),null,null,1,false));
-        final JLabel label24 = new JLabel();
-        Font label24Font = this.$$$getFont$$$(null,-1,18,label24.getFont());
-        if(label24Font != null) label24.setFont(label24Font);
-        label24.setText("Comparison Results                                                        ");
-        rightPanel.add(label24,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        final JLabel label22 = new JLabel();
+        label22.setBackground(new Color(-4473925));
+        Font label22Font = this.$$$getFont$$$(null,-1,18,label22.getFont());
+        if(label22Font != null) label22.setFont(label22Font);
+        label22.setText("Comparison Results                                                        ");
+        rightPanel.add(label22,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JPanel panel17 = new JPanel();
         panel17.setLayout(new GridLayoutManager(2,4,new Insets(0,0,0,0),0,0,true,false));
         panel17.setAlignmentY(0.5f);
         rightPanel.add(panel17,new GridConstraints(1,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_WANT_GROW,null,null,null,0,false));
+        final JLabel label23 = new JLabel();
+        Font label23Font = this.$$$getFont$$$(null,-1,16,label23.getFont());
+        if(label23Font != null) label23.setFont(label23Font);
+        label23.setText("Feature");
+        panel17.add(label23,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(39,15),null,0,false));
+        final JLabel label24 = new JLabel();
+        Font label24Font = this.$$$getFont$$$(null,-1,16,label24.getFont());
+        if(label24Font != null) label24.setFont(label24Font);
+        label24.setText("Detail");
+        panel17.add(label24,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(30,15),null,0,false));
         final JLabel label25 = new JLabel();
         Font label25Font = this.$$$getFont$$$(null,-1,16,label25.getFont());
         if(label25Font != null) label25.setFont(label25Font);
-        label25.setText("Feature");
-        panel17.add(label25,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(39,15),null,0,false));
+        label25.setText("Weight");
+        panel17.add(label25,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(38,15),null,0,false));
         final JLabel label26 = new JLabel();
         Font label26Font = this.$$$getFont$$$(null,-1,16,label26.getFont());
         if(label26Font != null) label26.setFont(label26Font);
-        label26.setText("Detail");
-        panel17.add(label26,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(30,15),null,0,false));
-        final JLabel label27 = new JLabel();
-        Font label27Font = this.$$$getFont$$$(null,-1,16,label27.getFont());
-        if(label27Font != null) label27.setFont(label27Font);
-        label27.setText("Weight");
-        panel17.add(label27,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(38,15),null,0,false));
-        final JLabel label28 = new JLabel();
-        Font label28Font = this.$$$getFont$$$(null,-1,16,label28.getFont());
-        if(label28Font != null) label28.setFont(label28Font);
-        label28.setText("Likeliness");
-        panel17.add(label28,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(50,15),null,0,false));
+        label26.setText("Likeliness");
+        panel17.add(label26,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(50,15),null,0,false));
         panel17.add(resultsPanel,new GridConstraints(1,0,1,4,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         overallPanel.setBackground(new Color(-13157828));
         rightPanel.add(overallPanel,new GridConstraints(2,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
-        final JLabel label29 = new JLabel();
-        Font label29Font = this.$$$getFont$$$(null,-1,24,label29.getFont());
-        if(label29Font != null) label29.setFont(label29Font);
-        label29.setText("Results Window");
-        panel3.add(label29,new GridConstraints(0,0,1,2,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(234,32),null,0,false));
+        final JLabel label27 = new JLabel();
+        Font label27Font = this.$$$getFont$$$(null,-1,24,label27.getFont());
+        if(label27Font != null) label27.setFont(label27Font);
+        label27.setText("Results Window");
+        panel3.add(label27,new GridConstraints(0,0,1,2,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(234,32),null,0,false));
         return3 = new JButton();
         Font return3Font = this.$$$getFont$$$(null,-1,16,return3.getFont());
         if(return3Font != null) return3.setFont(return3Font);
