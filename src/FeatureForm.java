@@ -11,6 +11,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 
 public class FeatureForm{
     private JButton testButton;
@@ -19,6 +20,8 @@ public class FeatureForm{
     private JTextField lowerRangeField;
     private JTextField upperRangeField;
     private ComparisonData data = new ComparisonData("Temporary");
+
+    HashMap<String,String> featureDescriptions = new HashMap<String,String>();
 
     public FeatureForm(int featureId,ComparisonData data,MainApplication window){
         this(featureId,data.getFeatureName(),data.getLowerRange() + "",data.getUpperRange() + "",data.getWeight(),
@@ -35,8 +38,17 @@ public class FeatureForm{
     }
 
     public FeatureForm(int featureId,String featureName,MainApplication window){
+        // populate featureDescriptions
+        featureDescriptions.put("Level","This algorithm returns the percentage of the terrain data that is within the specified range of terrain levels");
+        featureDescriptions.put("Exclude Level","This algorithm returns the percentage of the terrain data that is " +
+                "outside the specified range of terrain levels");
+        featureDescriptions.put("Max Horizontal","This algorithm returns the longest horizontal single-line specified range of terrain levels");
+        featureDescriptions.put("Max Vertical","This algorithm returns the longest vertical single-line specified range of terrain levels");
+        featureDescriptions.put("Max Diagonal","This algorithm returns the longest 45 degree single-line of specified range of terrain levels");
+        featureDescriptions.put("Max Area","This algorithm returns the percentage of the area (in pixels) of the largest bounded area of specified range of terrain");
+
         testButton.setText(featureName);
-        testButton.setToolTipText(Integer.toString(featureId));
+        testButton.setToolTipText(featureDescriptions.get(featureName));
         // TODO: Change setVisible to something else as it doesn't really remove the component
         testButton.addActionListener(e -> {
             panel.setVisible(false);

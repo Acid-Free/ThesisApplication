@@ -147,7 +147,7 @@ public class MainApplication extends JFrame{
         // General application window configurations
         window.setContentPane(window.cardPanel);
         window.setResizable(false);
-        window.setTitle("CompTerra 0.0.3");
+        window.setTitle("CompTerra 0.1.0");
         window.setSize(1280,720);
         window.setVisible(true);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
