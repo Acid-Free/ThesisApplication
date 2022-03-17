@@ -9,7 +9,6 @@ TODO: force users to input two terrain files and input at least one terrain feat
 TODO: add a default terrain feature filled with range and weight
 TODO: enforce a max terrain feature (14) as it overflows otherwise
 */
-import com.bulenkov.darcula.DarculaLaf;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -63,11 +62,12 @@ public class MainApplication extends JFrame{
     private JButton addFeatureButton;
     private JComboBox featureComboBox;
     private JButton proceed0;
-    private JPanel testPanel;
+    private JPanel helpPanel;
     private JPanel resultsPanel;
     private JPanel overallPanel;
     private JLabel resultsTerrain1Name;
     private JLabel resultsTerrain2Name;
+    private JLabel helpLabel;
     private JScrollPane scrollPane;
 
     HashMap<Integer,ComparisonData> allComparisonData = new HashMap<>();
@@ -130,6 +130,10 @@ public class MainApplication extends JFrame{
             if(window.createTerrainFileChooserNative(terrain2,imageHelper))
                 window.selectTerrainData2Button.setText(terrain2.getTerrainName());
         });
+
+        // Initialize help section
+        ImageIcon helpIcon = new ImageIcon(window.getClass().getResource("help_image.PNG"));
+        window.helpLabel.setIcon(helpIcon);
 
         window.addFeatureButton.addActionListener(e -> {
             window.addSelectedFeature();
@@ -248,6 +252,7 @@ public class MainApplication extends JFrame{
         this.terrainImageLabel2.setIcon(terrainIcon2);
         this.resultsTerrain1.setIcon(terrainIcon3);
         this.resultsTerrain2.setIcon(terrainIcon4);
+
     }
 
     boolean createTerrainFileChooser(TerrainData terrainData,TerrainImageHelper imageHelper){
@@ -320,9 +325,12 @@ public class MainApplication extends JFrame{
         if(label1Font != null) label1.setFont(label1Font);
         label1.setText("Help Window");
         panel0.add(label1,new GridConstraints(0,0,1,2,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
-        testPanel = new JPanel();
-        testPanel.setLayout(new GridLayoutManager(1,1,new Insets(0,0,0,0),-1,-1));
-        panel0.add(testPanel,new GridConstraints(1,0,1,2,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
+        helpPanel = new JPanel();
+        helpPanel.setLayout(new GridLayoutManager(1,1,new Insets(0,0,0,0),-1,-1));
+        panel0.add(helpPanel,new GridConstraints(1,0,1,2,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
+        helpLabel = new JLabel();
+        helpLabel.setText("");
+        helpPanel.add(helpLabel,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         proceed0 = new JButton();
         Font proceed0Font = this.$$$getFont$$$(null,-1,16,proceed0.getFont());
         if(proceed0Font != null) proceed0.setFont(proceed0Font);
@@ -395,11 +403,13 @@ public class MainApplication extends JFrame{
         Font label4Font = this.$$$getFont$$$(null,-1,18,label4.getFont());
         if(label4Font != null) label4.setFont(label4Font);
         label4.setText("Dimension");
+        label4.setToolTipText("This refers to the image width and height");
         panel7.add(label4,new GridConstraints(0,0,1,2,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JLabel label5 = new JLabel();
         Font label5Font = this.$$$getFont$$$(null,-1,18,label5.getFont());
         if(label5Font != null) label5.setFont(label5Font);
         label5.setText("Levels");
+        label5.setToolTipText("This refers to the height values being represented by the image pixel color");
         panel7.add(label5,new GridConstraints(4,0,1,2,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JLabel label6 = new JLabel();
         Font label6Font = this.$$$getFont$$$(null,-1,14,label6.getFont());
@@ -486,6 +496,7 @@ public class MainApplication extends JFrame{
         Font label11Font = this.$$$getFont$$$(null,-1,18,label11.getFont());
         if(label11Font != null) label11.setFont(label11Font);
         label11.setText("Dimension");
+        label11.setToolTipText("This refers to the image width and height");
         panel11.add(label11,new GridConstraints(0,0,1,2,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JLabel label12 = new JLabel();
         Font label12Font = this.$$$getFont$$$(null,-1,14,label12.getFont());
@@ -511,6 +522,7 @@ public class MainApplication extends JFrame{
         Font label14Font = this.$$$getFont$$$(null,-1,18,label14.getFont());
         if(label14Font != null) label14.setFont(label14Font);
         label14.setText("Levels");
+        label14.setToolTipText("This refers to the height values being represented by the image pixel color");
         panel11.add(label14,new GridConstraints(4,0,1,2,GridConstraints.ANCHOR_WEST,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         final JLabel label15 = new JLabel();
         Font label15Font = this.$$$getFont$$$(null,-1,14,label15.getFont());
