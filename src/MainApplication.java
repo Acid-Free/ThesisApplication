@@ -187,11 +187,6 @@ public class MainApplication extends JFrame{
             comparisonHelper.computeFeature(currentComparison,terrain1,terrain2);
 
             String featureName = currentComparison.getFeatureName();
-            // TODO: Update this when feature lists have different parameters (details)
-            String detail =
-                    String.format("%." + AdvancedConfigurations.accuracy + "f to %." + AdvancedConfigurations.accuracy + "f",
-                            currentComparison.getLowerRange(),
-                            currentComparison.getUpperRange());
             String weight = currentComparison.getWeight() + "";
             String likeliness =
                     String.format("%." + AdvancedConfigurations.accuracy + "f",currentComparison.getLikeliness());
@@ -201,12 +196,12 @@ public class MainApplication extends JFrame{
             overallSimilarity += currentComparison.getLikeliness() * currentComparison.getWeight();
 
 
-            this.resultsPanel.add(new ResultForm(featureName,detail,weight,likeliness).getPanel());
+            this.resultsPanel.add(new ResultForm(featureName,currentComparison.getLowerRange(),currentComparison.getUpperRange(),
+                    weight,likeliness).getPanel());
         }
 
         overallSimilarity /= totalWeight;
-        this.overallPanel.add(new ResultForm("Overall","","",
-                String.format("%." + AdvancedConfigurations.accuracy + "f",overallSimilarity)).getPanel());
+        this.overallPanel.add(new ResultForm(String.format("%." + AdvancedConfigurations.accuracy + "f",overallSimilarity)).getPanel());
     }
 
     void addSelectedFeature(){

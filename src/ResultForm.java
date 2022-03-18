@@ -14,12 +14,67 @@ public class ResultForm{
     private JLabel likelinessLabel;
     private JPanel panel;
 
-    public ResultForm(String featureName,String detail,String weight,
-                      String likeliness){
-        featureLabel.setText(featureName);
-        detailLabel.setText(detail);
+    public ResultForm(String featureName,float lowerRange,float upperRange,String weight,String likeness){
+        featureLabel.setText(generateFeatureDescription(featureName,lowerRange,upperRange));
+        detailLabel.setText(generateDetailDescription(lowerRange,upperRange));
         weightLabel.setText(weight);
-        likelinessLabel.setText(likeliness);
+        likelinessLabel.setText(likeness);
+    }
+
+    public ResultForm(String likeness){
+        featureLabel.setText("Overall");
+        detailLabel.setText("");
+        weightLabel.setText(likenessToString(likeness));
+        likelinessLabel.setText(likeness);
+    }
+
+    private String likenessToString(String likeness){
+        float floatValue = Float.parseFloat(likeness) / 100;
+        if(floatValue == 0.0f)
+            return "No Likeness";
+        if(floatValue > 0.0f && floatValue <= 0.4f)
+            return "Very Few Likeness";
+        if(floatValue > 0.4f && floatValue <= 0.6f)
+            return "Few Likeness";
+        if(floatValue > 0.6f && floatValue <= 0.75f)
+            return "Quite Notable Likeness";
+        if(floatValue > 0.75f && floatValue <= 0.9f)
+            return "Notable Likeness";
+        if(floatValue > 0.9f && floatValue < 1.0f)
+            return "Highly Notable Likeness";
+        else
+            return "Perfect Likeness";
+    }
+
+    private String generateFeatureDescription(String featureName,float lowerRange,float upperRange){
+        String lowerString = rangeToString(lowerRange);
+        String upperString = rangeToString(upperRange);
+        String rangeDescription = "";
+        if(lowerString.equals(upperString))
+            rangeDescription = String.format("(%s elevations)",lowerString);
+        else
+            rangeDescription = String.format("(%s to %s elevations)",lowerString,upperString);
+        return String.format("<html>%s<br/>%s<html>",featureName,rangeDescription);
+    }
+
+    private String rangeToString(float range){
+        if(range == 0.0f)
+            return "Lowest";
+        if(range > 0.0f && range <= 0.4f)
+            return "Lower";
+        if(range > 0.4f && range <= 0.6f)
+            return "Average";
+        if(range > 0.6f && range < 1.0f)
+            return "Higher";
+        if(range == 1.0f)
+            return "Highest";
+        else
+            return "Invalid";
+    }
+
+    private String generateDetailDescription(float lowerRange,float upperRange){
+        return String.format("%." + AdvancedConfigurations.accuracy + "f to %." + AdvancedConfigurations.accuracy + "f",
+                lowerRange,upperRange);
     }
 
     public JPanel getPanel(){
@@ -47,7 +102,7 @@ public class ResultForm{
         Font featureLabelFont = this.$$$getFont$$$(null,-1,14,featureLabel.getFont());
         if(featureLabelFont != null) featureLabel.setFont(featureLabelFont);
         featureLabel.setText("Label");
-        panel.add(featureLabel,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        panel.add(featureLabel,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_WANT_GROW,null,new Dimension(146,20),null,0,false));
         detailLabel = new JLabel();
         Font detailLabelFont = this.$$$getFont$$$(null,-1,14,detailLabel.getFont());
         if(detailLabelFont != null) detailLabel.setFont(detailLabelFont);
