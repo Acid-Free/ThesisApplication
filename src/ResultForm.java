@@ -12,20 +12,24 @@ public class ResultForm{
     private JLabel featureLabel;
     private JLabel weightLabel;
     private JLabel likelinessLabel;
-    private JPanel panel;
+    private JPanel resultFormPanel;
+    private JLabel interpretationLabel;
 
     public ResultForm(String featureName,float lowerRange,float upperRange,String weight,String likeness){
         featureLabel.setText(generateFeatureDescription(featureName,lowerRange,upperRange));
         detailLabel.setText(generateDetailDescription(lowerRange,upperRange));
         weightLabel.setText(weight);
         likelinessLabel.setText(likeness);
+        interpretationLabel.setText(likenessToString(likeness));
+        System.out.println(likenessToString(likeness));
     }
 
     public ResultForm(String likeness){
         featureLabel.setText("Overall");
         detailLabel.setText("");
-        weightLabel.setText(likenessToString(likeness));
+        weightLabel.setText("");
         likelinessLabel.setText(likeness);
+        interpretationLabel.setText(likenessToString(likeness));
     }
 
     private String likenessToString(String likeness){
@@ -55,7 +59,7 @@ public class ResultForm{
         if(lowerString.equals(upperString))
             rangeDescription = String.format("(%s elevations)",lowerString);
         else
-            rangeDescription = String.format("(%s to %s elevations)",lowerString,upperString);
+            rangeDescription = String.format("<html>(%s to %s <br/>elevations</html>)",lowerString,upperString);
         return String.format("<html>%s<br/>%s<html>",featureName,rangeDescription);
     }
 
@@ -80,7 +84,7 @@ public class ResultForm{
     }
 
     public JPanel getPanel(){
-        return panel;
+        return resultFormPanel;
     }
 
     {
@@ -98,28 +102,35 @@ public class ResultForm{
      * @noinspection ALL
      */
     private void $$$setupUI$$$(){
-        panel = new JPanel();
-        panel.setLayout(new GridLayoutManager(1,4,new Insets(0,0,0,0),-1,-1,true,false));
+        resultFormPanel = new JPanel();
+        resultFormPanel.setLayout(new GridLayoutManager(1,5,new Insets(0,0,0,0),-1,-1,true,false));
+        resultFormPanel.setMinimumSize(new Dimension(-1,24));
+        resultFormPanel.setPreferredSize(new Dimension(-1,24));
         featureLabel = new JLabel();
         Font featureLabelFont = this.$$$getFont$$$(null,-1,14,featureLabel.getFont());
         if(featureLabelFont != null) featureLabel.setFont(featureLabelFont);
         featureLabel.setText("Label");
-        panel.add(featureLabel,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_WANT_GROW,null,new Dimension(146,20),null,0,false));
+        resultFormPanel.add(featureLabel,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(-1,20),null,0,false));
         detailLabel = new JLabel();
         Font detailLabelFont = this.$$$getFont$$$(null,-1,14,detailLabel.getFont());
         if(detailLabelFont != null) detailLabel.setFont(detailLabelFont);
         detailLabel.setText("Label");
-        panel.add(detailLabel,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        resultFormPanel.add(detailLabel,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,1,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         weightLabel = new JLabel();
         Font weightLabelFont = this.$$$getFont$$$(null,-1,14,weightLabel.getFont());
         if(weightLabelFont != null) weightLabel.setFont(weightLabelFont);
         weightLabel.setText("Label");
-        panel.add(weightLabel,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        resultFormPanel.add(weightLabel,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,1,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         likelinessLabel = new JLabel();
         Font likelinessLabelFont = this.$$$getFont$$$(null,-1,14,likelinessLabel.getFont());
         if(likelinessLabelFont != null) likelinessLabel.setFont(likelinessLabelFont);
         likelinessLabel.setText("Label");
-        panel.add(likelinessLabel,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        resultFormPanel.add(likelinessLabel,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,1,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
+        interpretationLabel = new JLabel();
+        Font interpretationLabelFont = this.$$$getFont$$$(null,-1,14,interpretationLabel.getFont());
+        if(interpretationLabelFont != null) interpretationLabel.setFont(interpretationLabelFont);
+        interpretationLabel.setText("Label");
+        resultFormPanel.add(interpretationLabel,new GridConstraints(0,4,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,1,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
     }
 
     /**
@@ -150,7 +161,7 @@ public class ResultForm{
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$(){
-        return panel;
+        return resultFormPanel;
     }
 
 }
