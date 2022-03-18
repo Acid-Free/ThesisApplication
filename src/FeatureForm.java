@@ -8,10 +8,13 @@ import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class FeatureForm{
     private JButton testButton;
@@ -71,6 +74,7 @@ public class FeatureForm{
                 try{
                     // To invoke catch
                     float input = Float.parseFloat(text);
+                    System.out.println(input);
 
                     if(input < 0){
                         lowerRangeField.setText("0.0");
@@ -80,10 +84,22 @@ public class FeatureForm{
                         lowerRangeField.setText("1.0");
                         data.setLowerRange(1);
                     }
-                    else
+                    else{
+                        if(input >= 0.5){
+                            lowerRangeField.setForeground(new Color(10,10,10));
+                        }
+                        else{
+                            lowerRangeField.setForeground(new Color(187,187,187));
+                        }
+
+                        int color = (int)(input * 255);
+                        lowerRangeField.setBackground(new Color(color,color,color));
                         data.setLowerRange(Float.parseFloat(text));
+                    }
                 }catch(Exception f){
-//                    System.out.println("String is input instead of float");
+                    lowerRangeField.setForeground(new Color(187,187,187));
+                    lowerRangeField.setBackground(new Color(194,24,7));
+                    // System.out.println("String is input instead of float");
                     data.setLowerRange(-1);
                 }
             }
@@ -96,6 +112,7 @@ public class FeatureForm{
             public void changedUpdate(DocumentEvent e){
             }
         });
+
 
         upperRangeField.getDocument().addDocumentListener(new DocumentListener(){
             @Override
@@ -113,11 +130,23 @@ public class FeatureForm{
                         upperRangeField.setText("1.0");
                         data.setUpperRange(1);
                     }
-                    else
+                    else{
+                        if(input >= 0.5){
+                            upperRangeField.setForeground(new Color(10,10,10));
+                        }
+                        else{
+                            upperRangeField.setForeground(new Color(187,187,187));
+                        }
+
+                        int color = (int)(input * 255);
+                        upperRangeField.setBackground(new Color(color,color,color));
                         data.setUpperRange(Float.parseFloat(text));
+                    }
                 }catch(Exception f){
+                    upperRangeField.setForeground(new Color(187,187,187));
 //                    System.out.println("String is input instead of float");
                     data.setUpperRange(-1);
+                    upperRangeField.setBackground(new Color(194,24,7));
                 }
             }
 
@@ -173,8 +202,19 @@ public class FeatureForm{
         label1.setText("to");
         panel1.add(label1,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,null,null,0,false));
         lowerRangeField = new JTextField();
+        lowerRangeField.setAutoscrolls(true);
+        lowerRangeField.setBackground(new Color(-11513776));
+        lowerRangeField.setFocusable(true);
+        Font lowerRangeFieldFont = this.$$$getFont$$$(null,Font.BOLD,14,lowerRangeField.getFont());
+        if(lowerRangeFieldFont != null) lowerRangeField.setFont(lowerRangeFieldFont);
+        lowerRangeField.setForeground(new Color(-4473925));
         panel1.add(lowerRangeField,new GridConstraints(0,0,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(60,-1),new Dimension(60,-1),0,false));
         upperRangeField = new JTextField();
+        upperRangeField.setAutoscrolls(true);
+        upperRangeField.setBackground(new Color(-14605750));
+        Font upperRangeFieldFont = this.$$$getFont$$$(null,Font.BOLD,14,upperRangeField.getFont());
+        if(upperRangeFieldFont != null) upperRangeField.setFont(upperRangeFieldFont);
+        upperRangeField.setForeground(new Color(-4473925));
         panel1.add(upperRangeField,new GridConstraints(0,2,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_WANT_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(60,-1),new Dimension(60,-1),0,false));
         weightComboBox = new JComboBox();
         weightComboBox.setMaximumRowCount(10);
@@ -193,6 +233,30 @@ public class FeatureForm{
         panel1.add(weightComboBox,new GridConstraints(0,4,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(50,-1),new Dimension(50,-1),0,false));
         final Spacer spacer1 = new Spacer();
         panel1.add(spacer1,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_HORIZONTAL,GridConstraints.SIZEPOLICY_WANT_GROW,1,null,null,null,0,false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName,int style,int size,Font currentFont){
+        if(currentFont == null) return null;
+        String resultName;
+        if(fontName == null){
+            resultName = currentFont.getName();
+        }
+        else{
+            Font testFont = new Font(fontName,Font.PLAIN,10);
+            if(testFont.canDisplay('a') && testFont.canDisplay('1')){
+                resultName = fontName;
+            }
+            else{
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName,style >= 0 ? style : currentFont.getStyle(),size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name","").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(),font.getStyle(),font.getSize()) : new StyleContext().getFont(font.getFamily(),font.getStyle(),font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**

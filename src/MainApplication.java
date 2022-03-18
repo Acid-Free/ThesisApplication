@@ -151,7 +151,7 @@ public class MainApplication extends JFrame{
         // General application window configurations
         window.setContentPane(window.cardPanel);
         window.setResizable(false);
-        window.setTitle("CompTerra 0.1.0");
+        window.setTitle("CompTerra 0.1.1");
         window.setSize(1280,720);
         window.setVisible(true);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -672,7 +672,7 @@ public class MainApplication extends JFrame{
         final JLabel label24 = new JLabel();
         Font label24Font = this.$$$getFont$$$(null,-1,16,label24.getFont());
         if(label24Font != null) label24.setFont(label24Font);
-        label24.setText("Detail");
+        label24.setText("Target Elevation Range");
         panel17.add(label24,new GridConstraints(0,1,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(30,15),null,0,false));
         final JLabel label25 = new JLabel();
         Font label25Font = this.$$$getFont$$$(null,-1,16,label25.getFont());
@@ -682,7 +682,7 @@ public class MainApplication extends JFrame{
         final JLabel label26 = new JLabel();
         Font label26Font = this.$$$getFont$$$(null,-1,16,label26.getFont());
         if(label26Font != null) label26.setFont(label26Font);
-        label26.setText("Likeliness");
+        label26.setText("Likeness");
         panel17.add(label26,new GridConstraints(0,3,1,1,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_NONE,GridConstraints.SIZEPOLICY_FIXED,GridConstraints.SIZEPOLICY_FIXED,null,new Dimension(50,15),null,0,false));
         panel17.add(resultsPanel,new GridConstraints(1,0,1,4,GridConstraints.ANCHOR_CENTER,GridConstraints.FILL_BOTH,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,null,null,null,0,false));
         overallPanel.setBackground(new Color(-13157828));

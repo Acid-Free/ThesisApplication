@@ -800,7 +800,7 @@
                         </constraints>
                         <properties>
                           <font size="16"/>
-                          <text value="Detail"/>
+                          <text value="Target Elevation Range"/>
                         </properties>
                       </component>
                       <component id="fb32" class="javax.swing.JLabel">
@@ -822,7 +822,7 @@
                         </constraints>
                         <properties>
                           <font size="16"/>
-                          <text value="Likeliness"/>
+                          <text value="Likeness"/>
                         </properties>
                       </component>
                       <grid id="c3e61" binding="resultsPanel" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

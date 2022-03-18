@@ -32,16 +32,18 @@ public class ResultForm{
         float floatValue = Float.parseFloat(likeness) / 100;
         if(floatValue == 0.0f)
             return "No Likeness";
-        if(floatValue > 0.0f && floatValue <= 0.4f)
-            return "Very Few Likeness";
+        if(floatValue > 0.0f && floatValue <= 0.2f)
+            return "Negligible Likeness";
+        if(floatValue > 0.2f && floatValue <= 0.4f)
+            return "Very Low Likeness";
         if(floatValue > 0.4f && floatValue <= 0.6f)
-            return "Few Likeness";
-        if(floatValue > 0.6f && floatValue <= 0.75f)
-            return "Quite Notable Likeness";
-        if(floatValue > 0.75f && floatValue <= 0.9f)
-            return "Notable Likeness";
-        if(floatValue > 0.9f && floatValue < 1.0f)
-            return "Highly Notable Likeness";
+            return "Low Likeness";
+        if(floatValue > 0.6f && floatValue <= 0.8f)
+            return "Moderate Likeness";
+        if(floatValue > 0.8f && floatValue <= 0.95f)
+            return "High Likeness";
+        if(floatValue > 0.95f && floatValue < 1.0f)
+            return "Very High Likeness";
         else
             return "Perfect Likeness";
     }
@@ -73,8 +75,8 @@ public class ResultForm{
     }
 
     private String generateDetailDescription(float lowerRange,float upperRange){
-        return String.format("%." + AdvancedConfigurations.accuracy + "f to %." + AdvancedConfigurations.accuracy + "f",
-                lowerRange,upperRange);
+        return String.format("%." + AdvancedConfigurations.visual_accuracy + "f%% to %." + AdvancedConfigurations.visual_accuracy +
+                "f%%",lowerRange * 100,upperRange * 100);
     }
 
     public JPanel getPanel(){
