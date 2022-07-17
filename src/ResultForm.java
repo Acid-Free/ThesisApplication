@@ -1,3 +1,4 @@
+// Class for handling the result form used by the results (third) panel
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
@@ -15,6 +16,7 @@ public class ResultForm{
     private JPanel resultFormPanel;
     private JLabel interpretationLabel;
 
+    // First constructor
     public ResultForm(String featureName, float lowerRange, float upperRange, String weight, String likeness){
         featureLabel.setText(generateFeatureDescription(featureName, lowerRange, upperRange));
         detailLabel.setText(generateDetailDescription(lowerRange, upperRange));
@@ -24,6 +26,7 @@ public class ResultForm{
         System.out.println(likenessToString(likeness));
     }
 
+    // Second constructor
     public ResultForm(String likeness){
         featureLabel.setText("Overall");
         detailLabel.setText("");
@@ -32,6 +35,7 @@ public class ResultForm{
         interpretationLabel.setText(likenessToString(likeness));
     }
 
+    // Function used for returning a string representation of a likeness value
     private String likenessToString(String likeness){
         float floatValue = Float.parseFloat(likeness) / 100;
         if(floatValue == 0.0f)
@@ -52,6 +56,7 @@ public class ResultForm{
             return "Perfect Likeness";
     }
 
+    // Function used for returning a string representation of a feature description
     private String generateFeatureDescription(String featureName, float lowerRange, float upperRange){
         String lowerString = rangeToString(lowerRange);
         String upperString = rangeToString(upperRange);
@@ -63,6 +68,7 @@ public class ResultForm{
         return String.format("<html>%s<br/>%s<html>", featureName, rangeDescription);
     }
 
+    // Function used for returning a string representation of a range value in float form
     private String rangeToString(float range){
         if(range == 0.0f)
             return "Lowest";
@@ -78,6 +84,7 @@ public class ResultForm{
             return "Invalid";
     }
 
+    // Function used for returning a string representation of a detail description (lower and upper range)
     private String generateDetailDescription(float lowerRange, float upperRange){
         return String.format("%." + AdvancedConfigurations.visual_accuracy + "f%% to %." + AdvancedConfigurations.visual_accuracy +
                 "f%%",lowerRange * 100,upperRange * 100);

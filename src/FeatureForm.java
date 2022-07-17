@@ -1,6 +1,4 @@
-/*
-TODO: Update ComparisonData after updating the components in the form
-*/
+// Class for handling the feature form used by the main (second) panel
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -24,14 +22,17 @@ public class FeatureForm {
     private JTextField upperRangeField;
     private ComparisonData data = new ComparisonData("Temporary");
 
+    // Data structure for storing feature descriptions
     HashMap<String, String> featureDescriptions = new HashMap<String, String>();
 
+    // First constructor
     public FeatureForm(int featureId, ComparisonData data, MainApplication window){
         this(featureId, data.getFeatureName(), data.getLowerRange() + "", data.getUpperRange() + "", data.getWeight(),
                 window);
         this.data = data;
     }
 
+    // Second constructor
     public FeatureForm(int featureId, String featureName, String lowerRangeValue, String upperRangeValue, int range, MainApplication window){
         this(featureId, featureName, window);
         lowerRangeField.setText(lowerRangeValue);
@@ -39,8 +40,9 @@ public class FeatureForm {
         weightComboBox.setSelectedIndex(range - 1);
     }
 
+    // Third constructor
     public FeatureForm(int featureId, String featureName, MainApplication window){
-        // populate featureDescriptions
+        // Populate featureDescriptions with necessary strings
         featureDescriptions.put("Level","This algorithm returns the percentage of the terrain data that is within the specified range of terrain levels");
         featureDescriptions.put("Exclude Level","This algorithm returns the percentage of the terrain data that is " +
                 "outside the specified range of terrain levels");

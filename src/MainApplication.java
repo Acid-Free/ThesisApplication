@@ -1,4 +1,5 @@
 /*
+Main class that handles the overall interactions and operations of the application
 
 Possible additions:
 TODO: force users to input two terrain files and input at least one terrain feature before proceeding
@@ -22,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MainApplication extends JFrame{
+    // Necessary GUI components for the application
     private JPanel cardPanel;
     private JPanel panel1;
     private JPanel panel2;
@@ -66,17 +68,18 @@ public class MainApplication extends JFrame{
     private JLabel helpLabel;
     private JScrollPane scrollPane;
 
+    // Data structure for storing all terrain comparison data of the current terrains
     HashMap<Integer,ComparisonData> allComparisonData = new HashMap<>();
     int featureId;
 
     public static void main(String[] args) throws IOException{
 
-        // Custom UI theme
-//        try{
-//            UIManager.setLookAndFeel(new DarculaLaf());
-//        }catch(UnsupportedLookAndFeelException e){
-//            e.printStackTrace();
-//        }
+        // Custom UI theme, not necessary for final build
+        // try{
+        //        UIManager.setLookAndFeel(new DarculaLaf());
+        // }catch(UnsupportedLookAndFeelException e){
+        //    e.printStackTrace();
+        // }
 
         TerrainData terrain1 = new TerrainData();
         TerrainData terrain2 = new TerrainData();
@@ -112,16 +115,13 @@ public class MainApplication extends JFrame{
 
         window.selectTerrainData1Button.addActionListener(e -> {
             // Approach A
-//            if(window.createTerrainFileChooser(terrain1,imageHelper))
-//                window.selectTerrainData1Button.setText(terrain1.getTerrainName());
+            // if(window.createTerrainFileChooser(terrain1,imageHelper))
+            //     window.selectTerrainData1Button.setText(terrain1.getTerrainName());
             // Approach B
             if(window.createTerrainFileChooserNative(terrain1, imageHelper))
                 window.selectTerrainData1Button.setText(terrain1.getTerrainName());
         });
         window.selectTerrainData2Button.addActionListener(e -> {
-            // Approach A
-//            if(window.createTerrainFileChooser(terrain2,imageHelper))
-//                window.selectTerrainData2Button.setText(terrain2.getTerrainName());
             // Approach B
             if(window.createTerrainFileChooserNative(terrain2,imageHelper))
                 window.selectTerrainData2Button.setText(terrain2.getTerrainName());
@@ -138,7 +138,7 @@ public class MainApplication extends JFrame{
             window.comparisonPanel.revalidate();
         });
 
-        // default terrain feature
+        // populating a terrain feature with default data
         ++window.featureId;
         ComparisonData defaultComparisonData = new ComparisonData("Level",0.0f,1.0f,1);
         window.allComparisonData.put(window.featureId, defaultComparisonData);
@@ -155,6 +155,7 @@ public class MainApplication extends JFrame{
         c1.next(window.getContentPane());
     }
 
+    // Updates the results window to show the latest terrain result comparisons
     void updateResultsWindow(TerrainComparisonHelper comparisonHelper, TerrainData terrain1, TerrainData terrain2){
 
         resultsTerrain1Name.setText(terrain1.getTerrainName());
@@ -192,6 +193,7 @@ public class MainApplication extends JFrame{
         this.overallPanel.add(new ResultForm(String.format("%." + AdvancedConfigurations.accuracy + "f",overallSimilarity)).getPanel());
     }
 
+    // Function for adding a selected feature to a list to be shown in the necessary panels
     void addSelectedFeature(){
         String featureName = this.featureComboBox.getSelectedItem().toString();
         ++featureId;
@@ -200,10 +202,12 @@ public class MainApplication extends JFrame{
         this.comparisonPanel.add(new FeatureForm(featureId,newFormData,this).getPanel());
     }
 
+    // Function used for removing a feature from a list used to show all the selected features
     void removeFeature(int featureId){
         allComparisonData.remove(featureId);
     }
 
+    // Function used for updating the main window to show the latest information
     void updateMainWindow(TerrainData terrain1, TerrainData terrain2){
         this.terrain1Name.setText(terrain1.getTerrainName());
         this.terrain2Name.setText(terrain2.getTerrainName());
@@ -219,10 +223,13 @@ public class MainApplication extends JFrame{
         this.terrain2Lowest.setText(getPercentage(terrain2.getLowestLevel()));
     }
 
+    // Returns the percentage of a float
     String getPercentage(float input){
         return String.format("%." + AdvancedConfigurations.accuracy + "f%%",input * 100);
     }
 
+    // Function for initializing icons based on the visualizations of terrains; 
+    // ensures that the image size is consistent to not ruin the application panels
     void initializeIcons(TerrainData terrain1, TerrainData terrain2,
                          TerrainImageHelper imageHelper){
         // 385 is the maximum width of the JPanel that holds the JLabel for the icon (res 1280 x 720) before expanding
@@ -238,6 +245,7 @@ public class MainApplication extends JFrame{
 
     }
 
+    // Function for creating and initializing the file chooser class used for selecting the terrains to be compared using a file explorer
     boolean createTerrainFileChooser(TerrainData terrainData, TerrainImageHelper imageHelper){
         JFileChooser fileChooser = new JFileChooser();
 
@@ -252,6 +260,8 @@ public class MainApplication extends JFrame{
         return false;
     }
 
+    // Function for creating and initializing the file chooser class used for selecting the terrains to be compared using a file explorer
+    // This specific implementation uses the default file chooser of the operating system the application is run on
     boolean createTerrainFileChooserNative(TerrainData terrainData, TerrainImageHelper imageHelper){
         FileDialog fileDialog = new FileDialog(this,"Select terrain file",FileDialog.LOAD);
         fileDialog.setVisible(true);
@@ -270,6 +280,7 @@ public class MainApplication extends JFrame{
         return true;
     }
 
+    // Function used for loading the terrain data into the application
     void loadTerrainData(String terrainPath, TerrainData terrainData, TerrainImageHelper imageHelper){
         BufferedImage terrainImage;
         try{

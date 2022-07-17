@@ -1,10 +1,10 @@
+// Class that contains functions used for comparing terrains with several metrics / features
 public class TerrainComparisonHelper{
 
+    // Main constructor
+    public TerrainComparisonHelper(){}
 
-    public TerrainComparisonHelper(){
-
-    }
-
+    // Function used for calculating the feature comparison value
     void computeFeature(ComparisonData comparisonData, TerrainData terrain1, TerrainData terrain2) {
         try{
             // Check if the ranges are valid
@@ -67,10 +67,12 @@ public class TerrainComparisonHelper{
         }
     }
 
+    // Retuns the likeness of a comparison in percentage form
     float computePercentageLikeliness(ComparisonData comparisonData) {
         return 100 - Math.abs(comparisonData.getTerrain1Result() - comparisonData.getTerrain2Result());
     }
 
+    // Returns the length comparison value
     float computeLengthLikeliness(String type, ComparisonData comparisonData, TerrainData terrain1,
                                   TerrainData terrain2) {
         int terrain1Max = 0;
@@ -99,6 +101,7 @@ public class TerrainComparisonHelper{
         return (1 - Math.abs(comparisonData.getTerrain1Result() / terrain1Max - comparisonData.getTerrain2Result() / terrain2Max)) * 100;
     }
 
+    // Returns the level feature comparison value
     float computeLevelFeature(ComparisonData comparisonData, TerrainData terrainData) {
         float[][] data = terrainData.getTerrainData();
         float min = comparisonData.getLowerRange();
@@ -115,6 +118,7 @@ public class TerrainComparisonHelper{
         return ((float)counter / (data.length * data[0].length)) * 100;
     }
 
+    // Returns the exclude feature comparison value
     float computeExcludeLevelFeature(ComparisonData comparisonData, TerrainData terrainData) {
         float[][] data = terrainData.getTerrainData();
         float min = comparisonData.getLowerRange();
@@ -131,6 +135,7 @@ public class TerrainComparisonHelper{
         return ((float)counter / (data.length * data[0].length)) * 100;
     }
 
+    // Returns the max horizontal comparison value
     float computeMaxHorizontalFeature(ComparisonData comparisonData, TerrainData terrainData) {
         float[][] data = terrainData.getTerrainData();
         float min = comparisonData.getLowerRange();
@@ -153,6 +158,7 @@ public class TerrainComparisonHelper{
         return longest;
     }
 
+    // Returns the max vertical comparison value
     float computeMaxVerticalFeature(ComparisonData comparisonData, TerrainData terrainData) {
         float[][] data = terrainData.getTerrainData();
         float min = comparisonData.getLowerRange();
@@ -175,6 +181,7 @@ public class TerrainComparisonHelper{
         return longest;
     }
 
+    // Returns the max diagonal comparison value
     float computeMaxDiagonalFeature(ComparisonData comparisonData, TerrainData terrainData) {
         float[][] data = terrainData.getTerrainData();
         float min = comparisonData.getLowerRange();
@@ -202,6 +209,7 @@ public class TerrainComparisonHelper{
         return longest;
     }
 
+    // Returns the max area comparison value
     float computeMaxAreaFeature(ComparisonData comparisonData, TerrainData terrainData) {
         float[][] data = terrainData.getTerrainData();
         boolean[][] marked = new boolean[data.length][data[0].length];
@@ -223,7 +231,7 @@ public class TerrainComparisonHelper{
         return ((float)largestArea / (data.length * data[0].length)) * 100;
     }
 
-    int test = 0;
+    // Function used by the compute max area feature function to perform a flood fill algorithm
     int floodFill(float[][] data, boolean[][] marked, int i, int j, float min, float max) {
         int counter = 0;
 
@@ -233,9 +241,7 @@ public class TerrainComparisonHelper{
             else if  (data[i][j] >= min && data[i][j] <= max)
                 ++counter;
 
-//            System.out.println(i + ": " + j);
             marked[i][j] = true;
-            System.out.println(++test);
 
             // Navigate...
             // north

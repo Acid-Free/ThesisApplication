@@ -1,9 +1,11 @@
+// Class used for managing the conversion of raw terrain data into a form usable by the system
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class TerrainImageHelper{
 
+    // Function used to return the ImageIcon of a terrain from its image data
     ImageIcon getTerrainImage(String name, int width, int height) {
         ImageIcon image = new ImageIcon(name);
         float terrainImageRatio = (float)image.getIconWidth() / image.getIconHeight();
@@ -15,6 +17,7 @@ public class TerrainImageHelper{
         return image;
     }
 
+    // Function for returning a 2d array representation of a terrain
     float[][] readImageData(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -30,11 +33,13 @@ public class TerrainImageHelper{
         return result;
     }
 
+    // Function for setting the terrain data based from its image representation
     void convertTerrainData(BufferedImage image,TerrainData terrainData) {
         terrainData.setTerrainData(readImageData(image));
     }
 
     // Debug: Warning: Printing thousands of floats is slow
+    // Debug function for showing the 2d array representation of a terrain in text format
     void showTerrainData(TerrainData terrainData) {
         float[][] data = terrainData.getTerrainData();
         for (int i = 0; i < data.length; ++i) {
@@ -45,6 +50,7 @@ public class TerrainImageHelper{
         }
     }
 
+    // Function for computing the terrain levels based on its 2d array representation
     void computeTerrainLevels(TerrainData terrainData) {
         float highestLevel = 0.0f;
         float averageLevel = 0.0f;
