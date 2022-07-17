@@ -1,10 +1,6 @@
 /*
-Observations:
-Level and Exclude Level are fundamentally the same
 
-Recommendations:
-Show the users actual terrain feature values instead of just comparison values
-
+Possible additions:
 TODO: force users to input two terrain files and input at least one terrain feature before proceeding
 TODO: add a default terrain feature filled with range and weight
 TODO: enforce a max terrain feature (14) as it overflows otherwise
@@ -119,7 +115,7 @@ public class MainApplication extends JFrame{
 //            if(window.createTerrainFileChooser(terrain1,imageHelper))
 //                window.selectTerrainData1Button.setText(terrain1.getTerrainName());
             // Approach B
-            if(window.createTerrainFileChooserNative(terrain1,imageHelper))
+            if(window.createTerrainFileChooserNative(terrain1, imageHelper))
                 window.selectTerrainData1Button.setText(terrain1.getTerrainName());
         });
         window.selectTerrainData2Button.addActionListener(e -> {
@@ -145,8 +141,8 @@ public class MainApplication extends JFrame{
         // default terrain feature
         ++window.featureId;
         ComparisonData defaultComparisonData = new ComparisonData("Level",0.0f,1.0f,1);
-        window.allComparisonData.put(window.featureId,defaultComparisonData);
-        window.comparisonPanel.add(new FeatureForm(window.featureId,defaultComparisonData,window).getPanel());
+        window.allComparisonData.put(window.featureId, defaultComparisonData);
+        window.comparisonPanel.add(new FeatureForm(window.featureId, defaultComparisonData,window).getPanel());
 
         // General application window configurations
         window.setContentPane(window.cardPanel);
@@ -159,8 +155,7 @@ public class MainApplication extends JFrame{
         c1.next(window.getContentPane());
     }
 
-    // TODO: Currently placeholder, update after completing the algorithms for terrain features and comparison
-    void updateResultsWindow(TerrainComparisonHelper comparisonHelper,TerrainData terrain1,TerrainData terrain2){
+    void updateResultsWindow(TerrainComparisonHelper comparisonHelper, TerrainData terrain1, TerrainData terrain2){
 
         resultsTerrain1Name.setText(terrain1.getTerrainName());
         resultsTerrain2Name.setText(terrain2.getTerrainName());
@@ -175,14 +170,7 @@ public class MainApplication extends JFrame{
         // Computes the comparison value and similarity of the terrain data
         for(Map.Entry m: allComparisonData.entrySet()){
             // m.getKey() and m.getValue() mainly used inside this loop
-            // TODO: fix this suspicious call (double downcast?)
             ComparisonData currentComparison = allComparisonData.get(m.getKey());
-
-//            String featureName = currentComparison.getFeatureName();
-//            String detail = String.format("%.2f to %.2f",currentComparison.getLowerRange(),currentComparison.getUpperRange());
-//            String weight = String.format("%d",currentComparison.getWeight());
-//            String likeliness = "94% (placeholder)";
-//            this.resultsPanel.add(new ResultForm(featureName,detail,weight,likeliness).getPanel());
 
             comparisonHelper.computeFeature(currentComparison,terrain1,terrain2);
 
@@ -216,7 +204,7 @@ public class MainApplication extends JFrame{
         allComparisonData.remove(featureId);
     }
 
-    void updateMainWindow(TerrainData terrain1,TerrainData terrain2){
+    void updateMainWindow(TerrainData terrain1, TerrainData terrain2){
         this.terrain1Name.setText(terrain1.getTerrainName());
         this.terrain2Name.setText(terrain2.getTerrainName());
         this.terrain1Width.setText(Integer.toString(terrain1.getWidth()));
@@ -235,7 +223,7 @@ public class MainApplication extends JFrame{
         return String.format("%." + AdvancedConfigurations.accuracy + "f%%",input * 100);
     }
 
-    void initializeIcons(TerrainData terrain1,TerrainData terrain2,
+    void initializeIcons(TerrainData terrain1, TerrainData terrain2,
                          TerrainImageHelper imageHelper){
         // 385 is the maximum width of the JPanel that holds the JLabel for the icon (res 1280 x 720) before expanding
         ImageIcon terrainIcon1 = imageHelper.getTerrainImage(terrain1.getTerrainPath(),370,370);
@@ -250,7 +238,7 @@ public class MainApplication extends JFrame{
 
     }
 
-    boolean createTerrainFileChooser(TerrainData terrainData,TerrainImageHelper imageHelper){
+    boolean createTerrainFileChooser(TerrainData terrainData, TerrainImageHelper imageHelper){
         JFileChooser fileChooser = new JFileChooser();
 
         int response = fileChooser.showOpenDialog(null);
@@ -258,13 +246,13 @@ public class MainApplication extends JFrame{
         if(response == JFileChooser.APPROVE_OPTION){
             File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
             terrainData.setTerrainName(fileChooser.getSelectedFile().getName());
-            loadTerrainData(file.toString(),terrainData,imageHelper);
+            loadTerrainData(file.toString(), terrainData,imageHelper);
             return true;
         }
         return false;
     }
 
-    boolean createTerrainFileChooserNative(TerrainData terrainData,TerrainImageHelper imageHelper){
+    boolean createTerrainFileChooserNative(TerrainData terrainData, TerrainImageHelper imageHelper){
         FileDialog fileDialog = new FileDialog(this,"Select terrain file",FileDialog.LOAD);
         fileDialog.setVisible(true);
 
@@ -274,7 +262,7 @@ public class MainApplication extends JFrame{
                 terrainData.setTerrainName(String.format("%.18s...",name));
             else
                 terrainData.setTerrainName(name);
-            loadTerrainData(fileDialog.getDirectory() + fileDialog.getFile(),terrainData,imageHelper);
+            loadTerrainData(fileDialog.getDirectory() + fileDialog.getFile(), terrainData,imageHelper);
         }catch(NullPointerException e){
             System.out.println("Input selection cancelled.");
             return false;
@@ -282,12 +270,12 @@ public class MainApplication extends JFrame{
         return true;
     }
 
-    void loadTerrainData(String terrainPath,TerrainData terrainData,TerrainImageHelper imageHelper){
+    void loadTerrainData(String terrainPath, TerrainData terrainData, TerrainImageHelper imageHelper){
         BufferedImage terrainImage;
         try{
             terrainImage = ImageIO.read(new File(terrainPath));
 
-            imageHelper.convertTerrainData(terrainImage,terrainData);
+            imageHelper.convertTerrainData(terrainImage, terrainData);
             terrainData.setTerrainPath(terrainPath);
         }catch(IOException e){
             System.out.println("Cannot read the specified file");

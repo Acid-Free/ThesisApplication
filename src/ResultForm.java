@@ -15,9 +15,9 @@ public class ResultForm{
     private JPanel resultFormPanel;
     private JLabel interpretationLabel;
 
-    public ResultForm(String featureName,float lowerRange,float upperRange,String weight,String likeness){
-        featureLabel.setText(generateFeatureDescription(featureName,lowerRange,upperRange));
-        detailLabel.setText(generateDetailDescription(lowerRange,upperRange));
+    public ResultForm(String featureName, float lowerRange, float upperRange, String weight, String likeness){
+        featureLabel.setText(generateFeatureDescription(featureName, lowerRange, upperRange));
+        detailLabel.setText(generateDetailDescription(lowerRange, upperRange));
         weightLabel.setText(weight);
         likelinessLabel.setText(likeness);
         interpretationLabel.setText(likenessToString(likeness));
@@ -52,15 +52,15 @@ public class ResultForm{
             return "Perfect Likeness";
     }
 
-    private String generateFeatureDescription(String featureName,float lowerRange,float upperRange){
+    private String generateFeatureDescription(String featureName, float lowerRange, float upperRange){
         String lowerString = rangeToString(lowerRange);
         String upperString = rangeToString(upperRange);
         String rangeDescription = "";
         if(lowerString.equals(upperString))
-            rangeDescription = String.format("(%s elevations)",lowerString);
+            rangeDescription = String.format("(%s elevations)", lowerString);
         else
-            rangeDescription = String.format("<html>(%s to %s <br/>elevations</html>)",lowerString,upperString);
-        return String.format("<html>%s<br/>%s<html>",featureName,rangeDescription);
+            rangeDescription = String.format("<html>(%s to %s <br/>elevations</html>)", lowerString,upperString);
+        return String.format("<html>%s<br/>%s<html>", featureName, rangeDescription);
     }
 
     private String rangeToString(float range){
@@ -78,7 +78,7 @@ public class ResultForm{
             return "Invalid";
     }
 
-    private String generateDetailDescription(float lowerRange,float upperRange){
+    private String generateDetailDescription(float lowerRange, float upperRange){
         return String.format("%." + AdvancedConfigurations.visual_accuracy + "f%% to %." + AdvancedConfigurations.visual_accuracy +
                 "f%%",lowerRange * 100,upperRange * 100);
     }

@@ -35,7 +35,7 @@ public class ComparisonData{
         setFeatureName(featureName);
     }
 
-    public ComparisonData(String featureName,float lowerRangeValue,float upperRangeValue,int weight) {
+    public ComparisonData(String featureName, float lowerRangeValue, float upperRangeValue, int weight) {
         this(featureName);
         setLowerRange(lowerRangeValue);
         setUpperRange(upperRangeValue);

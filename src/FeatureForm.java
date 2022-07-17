@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class FeatureForm{
+public class FeatureForm {
     private JButton testButton;
     private JComboBox weightComboBox;
     private JPanel panel;
@@ -24,23 +24,22 @@ public class FeatureForm{
     private JTextField upperRangeField;
     private ComparisonData data = new ComparisonData("Temporary");
 
-    HashMap<String,String> featureDescriptions = new HashMap<String,String>();
+    HashMap<String, String> featureDescriptions = new HashMap<String, String>();
 
-    public FeatureForm(int featureId,ComparisonData data,MainApplication window){
-        this(featureId,data.getFeatureName(),data.getLowerRange() + "",data.getUpperRange() + "",data.getWeight(),
+    public FeatureForm(int featureId, ComparisonData data, MainApplication window){
+        this(featureId, data.getFeatureName(), data.getLowerRange() + "", data.getUpperRange() + "", data.getWeight(),
                 window);
         this.data = data;
     }
 
-    public FeatureForm(int featureId,String featureName,String lowerRangeValue,String upperRangeValue,
-                       int range,MainApplication window){
-        this(featureId,featureName,window);
+    public FeatureForm(int featureId, String featureName, String lowerRangeValue, String upperRangeValue, int range, MainApplication window){
+        this(featureId, featureName, window);
         lowerRangeField.setText(lowerRangeValue);
         upperRangeField.setText(upperRangeValue);
         weightComboBox.setSelectedIndex(range - 1);
     }
 
-    public FeatureForm(int featureId,String featureName,MainApplication window){
+    public FeatureForm(int featureId, String featureName, MainApplication window){
         // populate featureDescriptions
         featureDescriptions.put("Level","This algorithm returns the percentage of the terrain data that is within the specified range of terrain levels");
         featureDescriptions.put("Exclude Level","This algorithm returns the percentage of the terrain data that is " +
@@ -119,7 +118,7 @@ public class FeatureForm{
             public void insertUpdate(DocumentEvent e){
                 String text = upperRangeField.getText();
                 try{
-                    // To invoke catch
+                    // Used to invoke catch
                     float input = Float.parseFloat(text);
 
                     if(input < 0){
@@ -144,7 +143,6 @@ public class FeatureForm{
                     }
                 }catch(Exception f){
                     upperRangeField.setForeground(new Color(187,187,187));
-//                    System.out.println("String is input instead of float");
                     data.setUpperRange(-1);
                     upperRangeField.setBackground(new Color(194,24,7));
                 }
@@ -165,7 +163,6 @@ public class FeatureForm{
             try{
                 data.setWeight(weightComboBox.getSelectedIndex() + 1);
             }catch(NullPointerException f){
-//                System.out.println("WeightComboBox is null");
             }
         });
     }
