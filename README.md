@@ -1,4 +1,4 @@
-# ThesisApplication
+# CompTerra (Thesis)
 CompTerra: Terrain Comparison System for 3D Environment Creators
 
 ## Features: 
